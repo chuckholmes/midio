@@ -13,7 +13,7 @@ describe('Midi.Builder', function () {
         var builder = new Midi.Builder();
         
         var events = [];
-        
+               
         console.log ('Events ---');
         track.forEach(function (msg) {
             var event = builder.buildEvent(msg);

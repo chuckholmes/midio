@@ -8,16 +8,16 @@ window.Midi.Builder = function (){
     };
         
     function buildEvent (msg) {                        
-        return (msg.channel !== undefined) ? buildChannelEvent(msg) : buildMetaEvent(msg);        
-    }
-    
-    function buildMetaEvent(msg) {
         
-        var reader = (msg.data) ? new BufferReader(msg.data) : null;        
         var event = {};
+        var reader = (msg.data) ? new BufferReader(msg.data) : null;        
+                        
+        if (msg.channel) event.channel = msg.channel;
+        if (msg.delta) event.delta = msg.delta;
         
-        switch (msg.type) {
-            
+        switch (msg.command || msg.type) {
+                        
+            // meta events
             case 0x00:
                 event.type = 'sequence-number';                
                 event.number = reader.readInt16();
@@ -59,7 +59,7 @@ window.Midi.Builder = function (){
                 break;                
             case 0x51:
                 event.type = 'set-tempo';                
-                event.microsecondsPerBeat = ((reader.readInt8() << 16) + (reader.readInt8() << 8) + reader.readInt8());
+                event.microsecondsPerBeat = ((reader.readUint8() << 16) + (reader.readUint8() << 8) + reader.readUint8());
                 break;
             case 0x54:
                 event.type = 'smpte-offset';                
@@ -87,21 +87,8 @@ window.Midi.Builder = function (){
                 event.type = 'sequencer-specific';
                 event.data = reader.read(length);
                 break;
-                                
-            default:
-                event.type = 'meta';
-                event.msg = msg;                
-        }
-        
-        return event;        
-    }
-    
-    function buildChannelEvent(msg) {
-        
-        var event = {channel: msg.channel, delta: msg.tick};
-                
-        switch (msg.command || msg.type) {
-            
+
+            // channel events               
             case 0x08:
                 event.type = 'note-off';
                 event.note = msg.param1;
@@ -134,30 +121,28 @@ window.Midi.Builder = function (){
                 event.type = 'pitch-bend';
                 event.value = msg.param1 + (msg.param2 << 7);
                 break;
+                                                
             default:                
-                throw "Unrecognised MIDI event type: " + eventType;
+                throw 'Unrecognised Message Type: ' + msg.type;           
         }
         
-        return event;
-        
+        return event;        
     }
-    
+        
         
     function buildMessage (event) {
-        
-        return (event.channel !== undefined) ? buildChannelMessage(event) : buildMetaMessage(event);                   		
-    }        
-        
-    function buildMetaMessage (event) {
-        
+                
         var writer = new BufferWriter();
         var message = {};
+        
+        if (event.channel) message.channel = event.channel;
+        if (event.delta) message.delta = event.delta;
     
         switch (event.type) {
 
+            // meta events
             case 'sequence-number':
-                event.type = 0x00;                
-                event.number = reader.readInt16();
+                message = buildLongMessage(0x00, writer.readInt16(event.number).getBuffer());
                 break;  
             case 'text':
                 message.type = 0x01;
@@ -194,112 +179,59 @@ window.Midi.Builder = function (){
                 message.data = writer.writeString(event.text).getBuffer();
                 message.length = message.data.byteLength;
                 break;
+            case 'midi-channel-prefix':
+                message.type = 0x20;
+                message.data = writer.writeInt8(event.channel).getBuffer();
+                message.length = message.data.byteLength;                                                
+                break;                
+            case 'end-of-track':
+                message.type = 0x2f;
+                message.data = null;
+                message.length = 0;                
+                break;                
+            //case 'set-tempo':
+            //    message.type = 0x51;                
+            //    event.microsecondsPerBeat = ((reader.readInt8() << 16) + (reader.readInt8() << 8) + reader.readInt8());
+            //    break;
+                
+                
+            // channel events                
+            case 'note-off':
+                message.command = 0x08;
+                message.param1 = event.note;
+                message.param2 = event.velocity;                               
+                break;
+            case 'note-on':
+                message.command = 0x09;
+                message.param1 = event.note;
+                message.param2 = event.velocity;                                                     					
+                break;
+            case 'note-aftertouch':
+                message.command = 0x0a;
+                message.param1 = event.note;
+                message.param2 = event.amount;                
+                break;                
+            case 'controller':
+                message.command = 0x0b;
+                message.param1 = event.controllerType;
+                message.param2 = event.value;                                                             
+                break;
+            case 'program-change':
+                message.command = 0x0c;
+                message.param1 = event.programNumber;
+                message.param2 = null;                           
+                break;
+            case 'channel-aftertouch':
+                message.command = 0x0c;
+                message.param1 = event.amount;
+                message.param2 = null;                                        
+                break;                                               
                 
             default: 
-                return event;                
+                message = {error: 'Unrecognised Event type: ' + event.type};                 
         }
         
         return message;               
     }
-    
-
-    
-    function buildChannelMessage (event) {
-        return event;
-    }
-    
-
-    
-
+           
 };
-
-
-        /*
-        var msg = {};
-        
-        switch (event.type) {
-
-			case 0x01: // text
-				bytes = longMsgBytes(eventId, stringToBytes(e.text));
-				break;
-
-			case 0x02: // copyright
-				bytes = longMsgBytes(eventId, stringToBytes(e.text));
-				break;
-
-			case 0x03: // track name
-				bytes = longMsgBytes(eventId, stringToBytes(e.text));
-				break;
-
-			case 0x04: // instrument
-				bytes = longMsgBytes(eventId, stringToBytes(e.text));
-				break;
-
-			case 0x05: // lyric
-				bytes = longMsgBytes(eventId, stringToBytes(e.text));
-				break;
-
-			case 0x06: // marker
-				bytes = longMsgBytes(eventId, stringToBytes(e.text));
-				break;
-
-			case 0x07: // cue point
-				bytes = longMsgBytes(eventId, stringToBytes(e.text));
-				break;
-
-                          
-			case 0x8: // note off
-				bytes = shortMsgBytes(eventId, e.time, e.channel, e.note, e.velocity);
-				break;
-
-			case 0x9: // note on
-				bytes = shortMsgBytes(eventId, e.time, e.channel, e.note, e.velocity);
-				break;
-
-			case 0xA: // note aftertouch
-				bytes = shortMsgBytes(eventId, e.time, e.channel, e.note, e.value);
-				break;
-
-			case 0xB: // controller
-				bytes = shortMsgBytes(eventId, e.time, e.channel, e.controller, e.value);
-				break;
-
-			case 0xC: // program change
-				bytes = shortMsgBytes(eventId, e.time, e.channel, e.value);
-				break;
-
-			case 0xD: // channel aftertouch
-				bytes = shortMsgBytes(eventId, e.time, e.channel, e.value);
-				break;
-
-			case 0xE: // pitch bend
-				break;
-
-			case 0x00: // sequence number
-				break;
-
-			case 0x20: // channel prefix
-				bytes = longMsgBytes(0x20, [e.channel]);
-				break;
-
-			case 0x51: // tempo
-				bytes = longMsgBytes(0x51, integerToBytes(e.mcsPerBeat));
-				break;
-
-			case 0x54: // smpte
-				break;
-
-			case 0x58: // time sig
-				bytes = longMsgBytes(0x58, [e.numerator, Math.round(Math.sqrt(e.denominator)), e.metronome, e.thirtyseconds]);
-				break;
-
-			case 0x59: // key sig
-				break;
-
-			case 0x7F: // sequencer specific
-				break;
-
-			case 0x2F: // end of track
-				break;
-                
-            */    
