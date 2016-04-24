@@ -1,33 +1,25 @@
 window.Midi = window.Midi || {};
 
 window.Midi.Builder = function (){
-
-	var SEQUENCE = 0x00, TEXT = 0x01, COPYRIGHT = 0x02, TRACK_NAME = 0x03, INSTRUMENT = 0x04, LYRICS = 0x05, MARKER = 0x06,
-        CUR_POINT = 0x07, NOTE_OFF = 0x8, NOTE_ON = 0x9, NOTE_AFTERTOUCH = 0xA, CONTROLLER = 0xB, PROGRAM = 0xC, CHANNEL_AFTERTOUCH = 0xD,
-        PITCH_BEND = 0xE, CHANNEL_PREFIX = 0x20, END_OF_TRACK =  0x2f, TEMPO = 0x51, SMPTE = 0x54, TIME_SIGNATURE = 0x58, KEY_SIGNATURE = 0x59;
                      
     return {
         buildEvent: buildEvent,
         buildMessage: buildMessage
     };
-    
-    
-    function buildEvent (msg) {
-                
+        
+    function buildEvent (msg) {                        
         return (msg.channel !== undefined) ? buildChannelEvent(msg) : buildMetaEvent(msg);        
     }
     
     function buildMetaEvent(msg) {
         
-        var reader = (msg.data) ? new BufferReader(msg.data) : null;
-        
+        var reader = (msg.data) ? new BufferReader(msg.data) : null;        
         var event = {};
         
         switch (msg.type) {
             
             case 0x00:
-                event.type = 'sequence-number';
-                if (msg.length != 2) throw "Expected length for sequence-number event is 2, got " + msg.length;
+                event.type = 'sequence-number';                
                 event.number = reader.readInt16();
                 break;                
             case 0x01:
@@ -59,22 +51,18 @@ window.Midi.Builder = function (){
                 event.text = reader.readString(msg.length);
                 break;                
             case 0x20:
-                event.type = 'midi-channel-prefix';
-                if (msg.length != 1) throw "Expected length for midi-channel-prefix event is 1, got " + msg.length;
+                event.type = 'midi-channel-prefix';                
                 event.channel = reader.readInt8();
                 break;                
             case 0x2f:
-                event.type = 'end-of-track';
-                if (msg.length !== 0) throw "Expected length for end-of-track event is 0, got " + msg.length;
+                event.type = 'end-of-track';                
                 break;                
             case 0x51:
-                event.type = 'set-tempo';
-                if (msg.length != 3) throw "Expected length for set-tempo event is 3, got " + msg.length;
+                event.type = 'set-tempo';                
                 event.microsecondsPerBeat = ((reader.readInt8() << 16) + (reader.readInt8() << 8) + reader.readInt8());
                 break;
             case 0x54:
-                event.type = 'smpte-offset';
-                if (msg.length != 5) throw "Expected length for smpte-offset event is 5, got " + msg.length;
+                event.type = 'smpte-offset';                
                 var hourByte = reader.readInt8();
                 event.frameRate = { 0x00: 24, 0x20: 25, 0x40: 29, 0x60: 30 }[hourByte & 0x60];
                 event.hour = hourByte & 0x1f;
@@ -84,16 +72,14 @@ window.Midi.Builder = function (){
                 event.subframe = reader.readInt8();
                 break;
             case 0x58:
-                event.type = 'time-signature';
-                if (msg.length != 4) throw "Expected length for time-signature event is 4, got " + msg.length;
+                event.type = 'time-signature';                
                 event.numerator = reader.readInt8();
                 event.denominator = Math.pow(2, reader.readInt8());
                 event.metronome = reader.readInt8();
                 event.thirtyseconds = reader.readInt8();
                 break;
             case 0x59:
-                event.type = 'key-signature';
-                if (msg.length != 2) throw "Expected length for key-signature event is 2, got " + msg.length;
+                event.type = 'key-signature';                
                 event.key = reader.readInt8();
                 event.scale = reader.readInt8();
                 break;
@@ -112,7 +98,7 @@ window.Midi.Builder = function (){
     
     function buildChannelEvent(msg) {
         
-        var event = {};
+        var event = {channel: msg.channel, delta: msg.tick};
                 
         switch (msg.command || msg.type) {
             
@@ -156,9 +142,164 @@ window.Midi.Builder = function (){
         
     }
     
-    
+        
     function buildMessage (event) {
         
+        return (event.channel !== undefined) ? buildChannelMessage(event) : buildMetaMessage(event);                   		
+    }        
+        
+    function buildMetaMessage (event) {
+        
+        var writer = new BufferWriter();
+        var message = {};
+    
+        switch (event.type) {
+
+            case 'sequence-number':
+                event.type = 0x00;                
+                event.number = reader.readInt16();
+                break;  
+            case 'text':
+                message.type = 0x01;
+                message.data = writer.writeString(event.text).getBuffer();
+                message.length = message.data.byteLength;
+                break;                
+            case 'copyright':
+                message.type = 0x02;
+                message.data = writer.writeString(event.text).getBuffer();
+                message.length = message.data.byteLength;
+                break;
+            case 'track-name':
+                message.type = 0x03;
+                message.data = writer.writeString(event.text).getBuffer();
+                message.length = message.data.byteLength;
+                break;
+            case 'instrument':
+                message.type = 0x04;
+                message.data = writer.writeString(event.text).getBuffer();
+                message.length = message.data.byteLength;
+                break;
+            case 'lyrics':
+                message.type = 0x05;
+                message.data = writer.writeString(event.text).getBuffer();
+                message.length = message.data.byteLength;
+                break;
+            case 'marker':
+                message.type = 0x06;
+                message.data = writer.writeString(event.text).getBuffer();
+                message.length = message.data.byteLength;
+                break;
+            case 'cue-point':
+                message.type = 0x07;
+                message.data = writer.writeString(event.text).getBuffer();
+                message.length = message.data.byteLength;
+                break;
+                
+            default: 
+                return event;                
+        }
+        
+        return message;               
     }
+    
+
+    
+    function buildChannelMessage (event) {
+        return event;
+    }
+    
+
+    
 
 };
+
+
+        /*
+        var msg = {};
+        
+        switch (event.type) {
+
+			case 0x01: // text
+				bytes = longMsgBytes(eventId, stringToBytes(e.text));
+				break;
+
+			case 0x02: // copyright
+				bytes = longMsgBytes(eventId, stringToBytes(e.text));
+				break;
+
+			case 0x03: // track name
+				bytes = longMsgBytes(eventId, stringToBytes(e.text));
+				break;
+
+			case 0x04: // instrument
+				bytes = longMsgBytes(eventId, stringToBytes(e.text));
+				break;
+
+			case 0x05: // lyric
+				bytes = longMsgBytes(eventId, stringToBytes(e.text));
+				break;
+
+			case 0x06: // marker
+				bytes = longMsgBytes(eventId, stringToBytes(e.text));
+				break;
+
+			case 0x07: // cue point
+				bytes = longMsgBytes(eventId, stringToBytes(e.text));
+				break;
+
+                          
+			case 0x8: // note off
+				bytes = shortMsgBytes(eventId, e.time, e.channel, e.note, e.velocity);
+				break;
+
+			case 0x9: // note on
+				bytes = shortMsgBytes(eventId, e.time, e.channel, e.note, e.velocity);
+				break;
+
+			case 0xA: // note aftertouch
+				bytes = shortMsgBytes(eventId, e.time, e.channel, e.note, e.value);
+				break;
+
+			case 0xB: // controller
+				bytes = shortMsgBytes(eventId, e.time, e.channel, e.controller, e.value);
+				break;
+
+			case 0xC: // program change
+				bytes = shortMsgBytes(eventId, e.time, e.channel, e.value);
+				break;
+
+			case 0xD: // channel aftertouch
+				bytes = shortMsgBytes(eventId, e.time, e.channel, e.value);
+				break;
+
+			case 0xE: // pitch bend
+				break;
+
+			case 0x00: // sequence number
+				break;
+
+			case 0x20: // channel prefix
+				bytes = longMsgBytes(0x20, [e.channel]);
+				break;
+
+			case 0x51: // tempo
+				bytes = longMsgBytes(0x51, integerToBytes(e.mcsPerBeat));
+				break;
+
+			case 0x54: // smpte
+				break;
+
+			case 0x58: // time sig
+				bytes = longMsgBytes(0x58, [e.numerator, Math.round(Math.sqrt(e.denominator)), e.metronome, e.thirtyseconds]);
+				break;
+
+			case 0x59: // key sig
+				break;
+
+			case 0x7F: // sequencer specific
+				break;
+
+			case 0x2F: // end of track
+				break;
+                
+            */    

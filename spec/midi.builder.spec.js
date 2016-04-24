@@ -12,14 +12,26 @@ describe('Midi.Builder', function () {
         
         var builder = new Midi.Builder();
         
+        var events = [];
+        
+        console.log ('Events ---');
         track.forEach(function (msg) {
-           console.log(builder.buildEvent(msg)); 
+            var event = builder.buildEvent(msg);
+            events.push(event);
+           console.log(event); 
         });
 
+        console.log ('Messages ---');
+        events.forEach(function (event) {
+           var message = builder.buildMessage(event);
+           console.log(message); 
+        });
         
 
         expect(typeof builder).toBe('object');
         
     });
+    
+    //it('should build Message', function(){});
     
 });
