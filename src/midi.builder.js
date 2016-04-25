@@ -189,10 +189,15 @@ window.Midi.Builder = function (){
                 message.data = null;
                 message.length = 0;                
                 break;                
-            //case 'set-tempo':
-            //    message.type = 0x51;                
-            //    event.microsecondsPerBeat = ((reader.readInt8() << 16) + (reader.readInt8() << 8) + reader.readInt8());
-            //    break;
+            case 'set-tempo':
+                message.type = 0x51;
+                var hex = event.microsecondsPerBeat.toString(16);                
+                writer.writeUint8(parseInt(hex.substring(0, 1), 16));                                
+                writer.writeUint8(parseInt(hex.substring(1, 3), 16));
+                writer.writeUint8(parseInt(hex.substring(3, 5), 16));
+                message.data = writer.getBuffer();
+                message.length = message.data.byteLength;                                            
+                break;
                 
                 
             // channel events                
