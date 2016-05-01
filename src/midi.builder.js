@@ -12,8 +12,8 @@ window.Midi.Builder = function (){
         var event = {};
         var reader = (msg.data) ? new BufferReader(msg.data) : null;        
                         
-        if (msg.channel) event.channel = msg.channel;
-        if (msg.delta) event.delta = msg.delta;
+        //if (msg.channel !== undefined) event.channel = msg.channel;
+        //if (msg.tick !== undefined) event.delta = msg.tick;
         
         switch (msg.command || msg.type) {
                         
@@ -125,6 +125,9 @@ window.Midi.Builder = function (){
             default:                
                 throw 'Unrecognised Message Type: ' + msg.type;           
         }
+
+        if (msg.channel !== undefined) event.channel = msg.channel;
+        if (msg.tick !== undefined) event.delta = msg.tick;
         
         return event;        
     }

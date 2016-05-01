@@ -14,17 +14,17 @@ describe('Midi.Builder', function () {
         
         var events = [];
                
-        console.log ('Events ---');
+        //console.log ('Events ---');
         track.forEach(function (msg) {
             var event = builder.buildEvent(msg);
             events.push(event);
            console.log(event); 
         });
 
-        console.log ('Messages ---');
+        //console.log ('Messages ---');
         events.forEach(function (event) {
            var message = builder.buildMessage(event);
-           console.log(message); 
+           //console.log(message); 
         });
         
 

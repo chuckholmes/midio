@@ -5,7 +5,6 @@ describe('Midi.Writer', function () {
     var _binary = window.atob(_b64); 
     var _buffer = Buffer.utils.byteStringToBuffer(_binary);
 
-
     var writer = new Midi.Writer();
     var reader = new Midi.Reader();
             
@@ -39,23 +38,64 @@ describe('Midi.Writer', function () {
         
         expect(output.type).toBe(input.type);
         expect(output.trackCount).toBe(input.trackCount);
-        expect(output.timeDivision).toBe(input.timeDivision); 
-                                              
+        expect(output.timeDivision).toBe(input.timeDivision);                                               
     });
     
     it('should write Track', function () {
         
-        var input = reader.read(_buffer);
-        
+        var input = reader.read(_buffer);        
         var buffer = writer.write(input);
         
         reader = new Midi.Reader();
         var output = reader.read(buffer);
         
-        expect(output.header.type).toBe(input.header.type);
-                
+        expect(output.header.type).toBe(input.header.type);                
         expect(compareBytes(_buffer, buffer)).toBe(true);                
     }); 
+    
+    it('should write Blob', function () {
+        
+        var midi = reader.read(_buffer);        
+        var buffer = writer.write(midi);
+        
+        // create blob        
+        var inputArray = new Uint8Array(buffer);
+        var blob = new Blob([inputArray], {type: 'application/octet-binary'}); 
+                
+        expect(blob.size).toBe(buffer.byteLength);
+                
+        // open blob
+        var fileReader = new FileReader();
+        var outputBuffer = null;
+        
+        fileReader.onloadend = function () {            
+            outputBuffer = fileReader.result;                        
+            expect(outputBuffer.byteLength).toBe(buffer.byteLength);
+            expect(compareBytes(outputBuffer, buffer)).toBe(true);            
+        };
+         
+        fileReader.readAsArrayBuffer(blob);
+                
+        // download blob
+        //downloadBlob(blob, 'test.mid');                
+    });
+    
+    function downloadBlob(blob, name) {
+        
+        var url = window.URL.createObjectURL(blob);                                                               
+
+        // download		        
+	    var a = document.createElement('a');
+	    document.body.appendChild(a);
+        a.style = 'display: none';	    
+	    a.download = name;	            	   	    
+	    a.href = url;	                    
+	    a.click();
+	    
+        // clean up
+	    window.URL.revokeObjectURL(url);	    
+	    document.body.removeChild(a);	
+    }
     
     function compareBytes(input, output) {
         
