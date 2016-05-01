@@ -53,40 +53,41 @@ window.Midi.Writer = (function (){
         
         var writer = new BufferWriter();
         
-        track.forEach(function (msg){
-            if (msg.channel !== undefined) {
-                writeShortMessage(writer, msg);
+        track.forEach(function (message){
+            
+            if (message.channel !== undefined) {
+                writeShortMessage(writer, message);
             } else {
-                writeMetaMessage(writer, msg);
+                writeMetaMessage(writer, message);
             }
         });
         
         return writer.getBuffer();
     }
     
-    function writeMetaMessage (writer, msg) {
+    function writeMetaMessage (writer, message) {
         
         writer.writeUint8(0x0);
         writer.writeUint8(0xFF);                
-        writer.writeUint8(msg.type);
-        writer.writeVarInt(msg.length);
+        writer.writeUint8(message.type);
+        writer.writeVarInt(message.length);
         
-        if (msg.length > 0) {
-            writer.writeBuffer(msg.data);    
+        if (message.length > 0) {
+            writer.writeBuffer(message.data);    
         }        
     }
     
-    function writeShortMessage (writer, msg) {
+    function writeShortMessage (writer, message) {
      
-        writer.writeVarInt(msg.tick);
+        writer.writeVarInt(message.time);
         
-        var status = parseInt(msg.command.toString(16) + msg.channel.toString(16), 16);
+        var status = parseInt(message.type.toString(16) + message.channel.toString(16), 16);
      
         writer.writeUint8(status);
-        writer.writeUint8(msg.param1);
+        writer.writeUint8(message.param1);
         
-        if (msg.param2) {
-            writer.writeUint8(msg.param2);
+        if (message.param2) {
+            writer.writeUint8(message.param2);
         }                    
     }
     

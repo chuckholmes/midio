@@ -69,23 +69,23 @@ window.Midi.Reader = (function (){
     function readTrack (buffer) {
         
         var messages = [];
-        var msg, tick, status;           
+        var message, time, status;           
                
         var reader = new BufferReader(buffer);
 
         while (reader.getPosition() < reader.buffer.byteLength) {
                                                     
-            tick = reader.readVarInt();                
+            time = reader.readVarInt();                
             status = reader.readUint8();                
                         
             if ((status & 0xf0) == 0xf0) {                                
-				msg = readMetaMessage(reader);                
+				message = readMetaMessage(reader);                
             }                        
             else {   
-                msg = readShortMessage(tick, status, reader);                
+                message = readChannelMessage(time, status, reader);                
             }
             
-            messages.push(msg);         
+            messages.push(message);         
         }
 
         return messages;               
@@ -108,30 +108,30 @@ window.Midi.Reader = (function (){
         };                        
     }    
         
-    function readShortMessage(tick, status, reader) {
+    function readChannelMessage(time, status, reader) {
         
         var channel = status & 0x0f;
-        var command = status >> 4;        
+        var type = status >> 4;        
         var param1 = reader.readUint8();
         var param2 = null;
               
-        if (hasTwoParams(command)) {
+        if (hasTwoParams(type)) {
             param2 = reader.readUint8();
         }
         
        return {
-            tick: tick,
+            time: time,
             channel: channel,
-            command: command,
+            type: type,
             param1: param1,
             param2: param2         
         };                         
     }        
     
-    function hasTwoParams(command) {
+    function hasTwoParams(type) {
         
         // note-off, note-on, note-aftertouch, controller, pitch-bend
-        return [0x08, 0x09, 0x0a, 0x0b, 0x0e].includes(command);
+        return [0x08, 0x09, 0x0a, 0x0b, 0x0e].includes(type);
     }
     
 });

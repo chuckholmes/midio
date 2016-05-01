@@ -4,7 +4,7 @@ describe('Midi.Builder', function () {
     var _binary = window.atob(_b64);   
     var _buffer = Buffer.utils.byteStringToBuffer(_binary);  
    
-    it('should build Event', function () {        
+    it('should build Detail', function () {        
         
         var reader = new Midi.Reader();
         var input = reader.read(_buffer);
@@ -12,18 +12,18 @@ describe('Midi.Builder', function () {
         
         var builder = new Midi.Builder();
         
-        var events = [];
+        var details = [];
                
-        //console.log ('Events ---');
-        track.forEach(function (msg) {
-            var event = builder.buildEvent(msg);
-            events.push(event);
-           console.log(event); 
+        //console.log ('details ---');
+        track.forEach(function (message) {
+            var detail = builder.buildDetail(message);
+            details.push(detail);
+           console.log(detail); 
         });
 
         //console.log ('Messages ---');
-        events.forEach(function (event) {
-           var message = builder.buildMessage(event);
+        details.forEach(function (detail) {
+           var message = builder.buildMessage(detail);
            //console.log(message); 
         });
         
@@ -32,6 +32,6 @@ describe('Midi.Builder', function () {
         
     });
     
-    //it('should build Message', function(){});
+    xit('should build Message', function(){ });
     
 });
