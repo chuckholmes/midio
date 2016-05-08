@@ -7,6 +7,7 @@ describe('Midi.Writer', function () {
 
     var writer = new Midi.Writer();
     var reader = new Midi.Reader();
+    var builder = new Midi.Builder();
             
     it('should write Chunk', function () {
        
@@ -53,6 +54,97 @@ describe('Midi.Writer', function () {
         expect(compareBytes(_buffer, buffer)).toBe(true);                
     }); 
     
+    it('should write File', function () {
+        
+        var inputBuffer = _buffer;                
+        var inputMessages = reader.read(inputBuffer);                        
+        var inputDetails = builder.buildMidiDetails(inputMessages);        
+                        
+        var outputMessages = builder.buildMidiMessages(inputDetails);
+        var outputDetails = builder.buildMidiDetails(outputMessages);        
+        var outputBuffer = writer.write(outputMessages);
+        
+        
+        var isValid = true;
+        for (var i = 0; i<inputDetails.tracks[0].length; i++ ) {
+            isValid = (JSON.stringify(inputDetails.tracks[0][i]) == JSON.stringify(outputDetails.tracks[0][i]));
+            //console.log(i + ' : ' + isValid);    
+        }
+                                
+        expect(compareBytes(inputBuffer, outputBuffer)).toBe(true);
+        
+        // build blob
+        var outputArray = new Uint8Array(outputBuffer);
+        var outputBlob = new Blob([outputArray], {type: 'application/octet-binary'});
+        
+        expect(outputBlob.size).toBe(outputBuffer.byteLength);
+         
+        // load blob
+        loadBlob(outputBlob).then(function (outputBuffer) {
+            
+            //var outputMessages = reader.read(outputBuffer);
+            //var outputDetails = builder.buildMidiDetails(outputMessages);            
+            //console.log(outputDetails);
+            
+            // compare bytes
+            expect(compareBytes(inputBuffer, outputBuffer)).toBe(true);                        
+        }.bind(this));
+                               
+        
+        //downloadBlob(outputBlob, 'shouldWriteFile.mid');                               
+                               
+    });
+
+
+    it('should write Details', function () {
+
+        var midi = {
+            header: {
+                type: 1,
+                timeDivision: 240,
+                trackCount: 1
+            },
+            tracks: [
+                [
+                    { type: "text", text: "Powered by Midio" },
+                    { type: "copyright", text: "JSFanatic" },
+                    { type: "track-name", text: "Love Wrangler" },
+                    { type: "instrument", text: "Keyboard" },
+                    { type: "lyrics", text: "Ohh baby yeah..." },
+                    { type: "marker", text: "Intro" },
+                    { type: "cue-point", text: "Dancers" },
+                    { type: 'sequence-number', number: 1},
+                    { type: "set-tempo", microsecondsPerBeat: 400000 },
+                    { type: "time-signature", numerator: 6, denominator: 8, metronome: 24, thirtyseconds: 8 },                    
+                    { type: "key-signature", key: 1, scale: 1 },
+                    { type: "note-on", note: 60, velocity: 90, channel: 0, time: 0 },
+                    { type: "note-off", note: 60, velocity: 90, channel: 0, time: 128 },
+                    { type: "controller", controllerType: 7, value: 128, channel: 0, time: 0 },
+                    { type: "note-aftertouch", note: 62, amount: 64, channel: 0, time: 0 },
+                    { type: "program-change", programNumber: 36, channel: 0, time: 0 },
+                    { type: "channel-aftertouch", amount: 127, channel: 0, time: 0 },
+                    { type: "midi-channel-prefix", channelNumber: 10 },
+                    { type: "end-of-track" }
+                ]
+            ]
+        };
+
+        // write midi
+        var outputMessages = builder.buildMidiMessages(midi);
+        var outputBuffer = writer.write(outputMessages);
+
+        // create blob
+        var inputArray = new Uint8Array(outputBuffer);
+        var blob = new Blob([inputArray], {type: 'application/octet-binary'});
+
+        expect(blob.size).toBe(outputBuffer.byteLength);
+
+        // download blob
+        //downloadBlob(blob, 'shouldWriteDetails.mid');
+
+    });
+    
+    
     it('should write Blob', function () {
         
         var midi = reader.read(_buffer);        
@@ -64,22 +156,27 @@ describe('Midi.Writer', function () {
                 
         expect(blob.size).toBe(buffer.byteLength);
                 
-        // open blob
-        var fileReader = new FileReader();
-        var outputBuffer = null;
-        
-        fileReader.onloadend = function () {            
-            outputBuffer = fileReader.result;                        
+        // load blob
+        loadBlob(blob).then(function(outputBuffer) {
             expect(outputBuffer.byteLength).toBe(buffer.byteLength);
-            expect(compareBytes(outputBuffer, buffer)).toBe(true);            
-        };
-         
-        fileReader.readAsArrayBuffer(blob);
-                
+            expect(compareBytes(outputBuffer, buffer)).toBe(true);  
+        });
+                        
         // download blob
         //downloadBlob(blob, 'test.mid');                
     });
     
+    function loadBlob(blob) {
+
+        return new Promise(function (resolve, reject) {                        
+            var fileReader = new FileReader();                                    
+            fileReader.onloadend = function () {            
+                resolve(fileReader.result);                              
+            };                        
+            fileReader.readAsArrayBuffer(blob);                        
+        });                
+    }
+        
     function downloadBlob(blob, name) {
         
         var url = window.URL.createObjectURL(blob);                                                               

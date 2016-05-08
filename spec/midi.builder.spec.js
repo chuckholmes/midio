@@ -35,11 +35,38 @@ describe('Midi.Builder', function () {
 
         var detail = builder.buildMidiDetails(input);
         //console.log(detail);
-        
+
         expect(detail.tracks.length).toBe(1);
 
         var messages = builder.buildMidiMessages(detail);
         //console.log(messages);
+
+        var timeSigDetail = findMessage(detail.tracks[0], 'time-signature')[0];
+        //console.log(timeSigDetail);
+
+        var timeSigMessage = findMessage(messages.tracks[0], 0x58)[0];
+        //console.log(timeSigMessage);
+
+        var output = builder.buildDetail(timeSigMessage);
+        //console.log(output);
     });
+    
+    
+    xit('should build Pitch Bend', {
+        /*
+        http://www.midikits.net/midi_analyser/pitch_bend.htm
+        
+        127 + (127 << 7)
+        16383
+        126 + (127 << 7)
+        16382
+        */ 
+    });
+    
+    function findMessage(messages, type) {
+        return  messages.filter(function (msg) {
+           return msg.type === type; 
+        });
+    }
 
 });

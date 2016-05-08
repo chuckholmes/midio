@@ -4,13 +4,13 @@ rw  note-off
 rw  note-on
 rw  note-aftertouch
 rw  control-change
---  program-change
+rw  program-change
 rw  channel-aftertouch
 --  pitch-bend
 
 # Meta Events
 
---  sequence-number	
+rw  sequence-number	
 rw  text	
 rw  copyright	
 rw  track-name	
@@ -22,6 +22,6 @@ rw  channel-prefix
 rw  end-of-track
 rw  set-tempo
 --  smtp
---  time-signature
---  key-signature
+rw  time-signature
+rw  key-signature
 --  sequencer-specific

@@ -101,7 +101,7 @@ window.Midi.Builder = function (){
                 break;
             case 0x20:
                 detail.type = 'midi-channel-prefix';
-                detail.channel = reader.readInt8();
+                detail.channelNumber = reader.readInt8();
                 break;
             case 0x2f:
                 detail.type = 'end-of-track';
@@ -188,14 +188,13 @@ window.Midi.Builder = function (){
         var writer = new BufferWriter();
         var message = {};
 
-        if (detail.channel) message.channel = detail.channel;
-        if (detail.time) message.time = detail.time;
-
         switch (detail.type) {
 
             // meta messages
             case 'sequence-number':
-                message = buildLongMessage(0x00, writer.readInt16(detail.number).getBuffer());
+                message.type = 0x00;
+                message.data = writer.writeInt16(detail.number).getBuffer();
+                message.length = message.data.byteLength;
                 break;
             case 'text':
                 message.type = 0x01;
@@ -234,7 +233,7 @@ window.Midi.Builder = function (){
                 break;
             case 'midi-channel-prefix':
                 message.type = 0x20;
-                message.data = writer.writeInt8(detail.channel).getBuffer();
+                message.data = writer.writeInt8(detail.channelNumber).getBuffer();
                 message.length = message.data.byteLength;
                 break;
             case 'end-of-track':
@@ -250,7 +249,24 @@ window.Midi.Builder = function (){
                 writer.writeUint8(parseInt(hex.substring(3, 5), 16));
                 message.data = writer.getBuffer();
                 message.length = message.data.byteLength;
+                break;                                
+            case 'time-signature':
+                message.type = 0x58;                
+                writer.writeUint8(detail.numerator);
+                writer.writeUint8(Math.round(Math.sqrt(detail.denominator)));
+                writer.writeUint8(detail.metronome);
+                writer.writeUint8(detail.thirtyseconds);                                    
+                message.data = writer.getBuffer();
+                message.length = message.data.byteLength;
                 break;
+                
+            case 'key-signature':
+                message.type = 0x59;
+                writer.writeInt8(detail.key);
+                writer.writeInt8(detail.scale);
+                message.data = writer.getBuffer();
+                message.length = message.data.byteLength;
+                break;                                                                            
 
             // channel messages
             case 'note-off':
@@ -279,7 +295,7 @@ window.Midi.Builder = function (){
                 message.param2 = null;
                 break;
             case 'channel-aftertouch':
-                message.type = 0x0c;
+                message.type = 0x0d;
                 message.param1 = detail.amount;
                 message.param2 = null;
                 break;
@@ -288,6 +304,9 @@ window.Midi.Builder = function (){
                 console.log('Unrecognised Message Type: ' + detail.type);
                 message = null;
         }
+                
+        if (detail.channel !== undefined) message.channel = detail.channel;
+        if (detail.time !== undefined) message.time = detail.time;
 
         return message;
     }
