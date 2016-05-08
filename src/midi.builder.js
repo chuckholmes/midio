@@ -300,6 +300,12 @@ window.Midi.Builder = function (){
                 message.param2 = null;
                 break;
                 
+            case 'pitch-bend':
+                message.type = 0x0e;
+                message.param2 = Math.floor(detail.value / 128);
+                message.param1 = detail.value % 128;
+                break;
+                
             default: 
                 console.log('Unrecognised Message Type: ' + detail.type);
                 message = null;

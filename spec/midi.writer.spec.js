@@ -123,6 +123,7 @@ describe('Midi.Writer', function () {
                     { type: "note-aftertouch", note: 62, amount: 64, channel: 0, time: 0 },
                     { type: "program-change", programNumber: 36, channel: 0, time: 0 },
                     { type: "channel-aftertouch", amount: 127, channel: 0, time: 0 },
+                    { type: "pitch-bend", value: 16383, channel: 0, time: 0 },
                     { type: "midi-channel-prefix", channelNumber: 10 },
                     { type: "end-of-track" }
                 ]

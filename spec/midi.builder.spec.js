@@ -52,7 +52,35 @@ describe('Midi.Builder', function () {
     });
     
     
-    xit('should build Pitch Bend', {
+    it('should build Pitch Bend', function (){
+
+        var builder = new Midi.Builder();
+
+        var minValue = 0;
+        var maxValue = 16383;
+        var midValue = 8192;
+
+        var result = builder.buildMessage({type: 'pitch-bend', value: maxValue});
+        expect(result.param1).toBe(127);
+        expect(result.param2).toBe(127);
+        
+        
+        var param1In = 127;
+        var param2In = 127;
+        
+        var maxResult = param1In + (param2In << 7);
+        //expect(maxResult).toBe(16383);
+
+        //param2Out = Math.round(maxResult / 128);
+        //param2Out = (param2Out < 128) ? param2Out : 127;
+        
+        param2Out = Math.floor(maxResult / 128);
+        param1Out = maxResult % 128;
+        
+        expect(param1Out).toBe(param1In);
+        expect(param2Out).toBe(param2In);
+        
+               
         /*
         http://www.midikits.net/midi_analyser/pitch_bend.htm
         

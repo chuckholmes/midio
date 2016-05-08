@@ -6,7 +6,7 @@ rw  note-aftertouch
 rw  control-change
 rw  program-change
 rw  channel-aftertouch
---  pitch-bend
+rw  pitch-bend
 
 # Meta Events
 
