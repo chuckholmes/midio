@@ -1,5 +1,5 @@
 
-### Midio - Javascript MIDI Filechu IO Library
+### Midio - Javascript MIDI File IO Library
 
 ```javascript
 
