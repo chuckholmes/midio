@@ -99,13 +99,10 @@ describe('Midi.Writer', function () {
     it('should write Details', function () {
 
         var midi = {
-            header: {
-                type: 1,
-                timeDivision: 240,
-                trackCount: 1
-            },
+            header: { type: 1, timeDivision: 240, trackCount: 1 },
             tracks: [
                 [
+                    // meta messages
                     { type: "text", text: "Powered by Midio" },
                     { type: "copyright", text: "JSFanatic" },
                     { type: "track-name", text: "Love Wrangler" },
@@ -115,8 +112,10 @@ describe('Midi.Writer', function () {
                     { type: "cue-point", text: "Dancers" },
                     { type: 'sequence-number', number: 1},
                     { type: "set-tempo", microsecondsPerBeat: 400000 },
-                    { type: "time-signature", numerator: 6, denominator: 8, metronome: 24, thirtyseconds: 8 },                    
+                    { type: "time-signature", numerator: 6, denominator: 8, metronome: 24, thirtyseconds: 8 },
                     { type: "key-signature", key: 1, scale: 1 },
+
+                    // channel messages
                     { type: "note-on", note: 60, velocity: 90, channel: 0, time: 0 },
                     { type: "note-off", note: 60, velocity: 90, channel: 0, time: 128 },
                     { type: "controller", controllerType: 7, value: 128, channel: 0, time: 0 },
@@ -144,8 +143,8 @@ describe('Midi.Writer', function () {
         //downloadBlob(blob, 'shouldWriteDetails.mid');
 
     });
-    
-    
+
+
     it('should write Blob', function () {
         
         var midi = reader.read(_buffer);        
@@ -166,7 +165,7 @@ describe('Midi.Writer', function () {
         // download blob
         //downloadBlob(blob, 'test.mid');                
     });
-    
+
     function loadBlob(blob) {
 
         return new Promise(function (resolve, reject) {                        
@@ -177,7 +176,7 @@ describe('Midi.Writer', function () {
             fileReader.readAsArrayBuffer(blob);                        
         });                
     }
-        
+
     function downloadBlob(blob, name) {
         
         var url = window.URL.createObjectURL(blob);                                                               
@@ -194,7 +193,7 @@ describe('Midi.Writer', function () {
 	    window.URL.revokeObjectURL(url);	    
 	    document.body.removeChild(a);	
     }
-    
+
     function compareBytes(input, output) {
         
         var result = true;        
@@ -208,5 +207,5 @@ describe('Midi.Writer', function () {
         }                
         return result;
     }
-    
+
 });
