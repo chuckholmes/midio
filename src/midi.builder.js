@@ -177,7 +177,7 @@ window.Midi.Builder = function (){
 
         if (message.data === undefined) {
             detail.channel = message.channel || 0;
-            detail.time = message.time || 0;
+            detail.delta = message.delta || 0;
         }
 
         return detail;
@@ -312,7 +312,7 @@ window.Midi.Builder = function (){
         }
                 
         if (detail.channel !== undefined) message.channel = detail.channel;
-        if (detail.time !== undefined) message.time = detail.time;
+        if (detail.delta !== undefined) message.delta = detail.delta;
 
         return message;
     }

@@ -1,30 +1,30 @@
 window.Midi = window.Midi || {};
 
 window.Midi.Reader = (function (){
-    
+
     return {
         read: read,
         readChunk: readChunk,
         readHeader: readHeader,
         readTrack: readTrack
     };
-    
+
     function read (buffer) {
-        
+
         var midi = {header: null, tracks:[]};
         var reader = new BufferReader(buffer);
-              
+
         // read header
         var headerChunk = readChunk(reader);
                
         if (headerChunk.id !== 'MThd') {
-            throw 'Invalid Header';     
+            throw 'Invalid Header';
         }
 
         midi.header = readHeader(headerChunk.buffer);
 
         // read tracks
-        for (var i = 0; i < midi.header.trackCount; i++) {                                    
+        for (var i = 0; i < midi.header.trackCount; i++) {
 
             var trackChunk = readChunk(reader); 
 
@@ -69,20 +69,20 @@ window.Midi.Reader = (function (){
     function readTrack (buffer) {
         
         var messages = [];
-        var message, time, status;           
+        var message, delta, status;
 
         var reader = new BufferReader(buffer);
 
         while (reader.getPosition() < reader.buffer.byteLength) {
 
-            time = reader.readVarInt();
+            delta = reader.readVarInt();
             status = reader.readUint8();
 
             if ((status & 0xf0) == 0xf0) {
-				message = readMetaMessage(reader);
+                message = readMetaMessage(reader);
             }
             else {
-                message = readChannelMessage(time, status, reader);                
+                message = readChannelMessage(delta, status, reader);
             }
 
             messages.push(message);
@@ -108,7 +108,7 @@ window.Midi.Reader = (function (){
         };
     }
 
-    function readChannelMessage(time, status, reader) {
+    function readChannelMessage(delta, status, reader) {
 
         var channel = status & 0x0f;
         var type = status >> 4;
@@ -120,7 +120,7 @@ window.Midi.Reader = (function (){
         }
 
        return {
-            time: time,
+            delta: delta,
             channel: channel,
             type: type,
             param1: param1,

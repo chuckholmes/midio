@@ -79,7 +79,7 @@ window.Midi.Writer = (function (){
     
     function writeShortMessage (writer, message) {
      
-        writer.writeVarInt(message.time);
+        writer.writeVarInt(message.delta);
         
         var status = parseInt(message.type.toString(16) + message.channel.toString(16), 16);
      

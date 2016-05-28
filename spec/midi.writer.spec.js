@@ -116,13 +116,13 @@ describe('Midi.Writer', function () {
                     { type: "key-signature", key: 1, scale: 1 },
 
                     // channel messages
-                    { type: "note-on", note: 60, velocity: 90, channel: 0, time: 0 },
-                    { type: "note-off", note: 60, velocity: 90, channel: 0, time: 128 },
-                    { type: "controller", controllerType: 7, value: 128, channel: 0, time: 0 },
-                    { type: "note-aftertouch", note: 62, amount: 64, channel: 0, time: 0 },
-                    { type: "program-change", programNumber: 36, channel: 0, time: 0 },
-                    { type: "channel-aftertouch", amount: 127, channel: 0, time: 0 },
-                    { type: "pitch-bend", value: 16383, channel: 0, time: 0 },
+                    { type: "note-on", note: 60, velocity: 90, channel: 0, delta: 0 },
+                    { type: "note-off", note: 60, velocity: 90, channel: 0, delta: 128 },
+                    { type: "controller", controllerType: 7, value: 128, channel: 0, delta: 0 },
+                    { type: "note-aftertouch", note: 62, amount: 64, channel: 0, delta: 0 },
+                    { type: "program-change", programNumber: 36, channel: 0, delta: 0 },
+                    { type: "channel-aftertouch", amount: 127, channel: 0, delta: 0 },
+                    { type: "pitch-bend", value: 16383, channel: 0, delta: 0 },
                     { type: "midi-channel-prefix", channelNumber: 10 },
                     { type: "end-of-track" }
                 ]
