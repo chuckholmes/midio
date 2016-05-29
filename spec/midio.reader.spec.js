@@ -14,7 +14,7 @@ describe('Midio.Reader', function (){
     it("should read Chunk", function () {
         
         var bufferReader = new BufferReader(_buffer);        
-        var midiReader = new Midi.Reader();
+        var midiReader = new Midio.Reader();
         var chunk = midiReader.readChunk(bufferReader);
         
         expect(chunk.id).toBe('MThd');
@@ -24,7 +24,7 @@ describe('Midio.Reader', function (){
     
     it("should read Header", function (){
     
-        var reader = new Midi.Reader();
+        var reader = new Midio.Reader();
         var midi = reader.read(_buffer);
                           
         expect(midi.header.trackCount).toBe(1);                                        
@@ -32,7 +32,7 @@ describe('Midio.Reader', function (){
     
     it("should read Track", function () {
         
-        var reader = new Midi.Reader();
+        var reader = new Midio.Reader();
         var midi = reader.read(_buffer);
                 
         expect(midi.tracks.length).toBe(1);                                                               

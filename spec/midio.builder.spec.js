@@ -6,8 +6,8 @@ describe('Midio.Builder', function () {
 
     it('should build Detail', function () {
 
-        var builder = new Midi.Builder();
-        var reader = new Midi.Reader();
+        var builder = new Midio.Builder();
+        var reader = new Midio.Reader();
         var input = reader.read(_buffer);
         var track = input.tracks[0];
 
@@ -29,9 +29,9 @@ describe('Midio.Builder', function () {
 
     it('should build Message', function(){ 
 
-        var reader = new Midi.Reader();
+        var reader = new Midio.Reader();
         var input = reader.read(_buffer);
-        var builder = new Midi.Builder();
+        var builder = new Midio.Builder();
 
         var detail = builder.buildMidiDetails(input);
         //console.log(detail);
@@ -54,7 +54,7 @@ describe('Midio.Builder', function () {
     
     it('should build Pitch Bend', function (){
 
-        var builder = new Midi.Builder();
+        var builder = new Midio.Builder();
 
         var minValue = 0;
         var maxValue = 16383;

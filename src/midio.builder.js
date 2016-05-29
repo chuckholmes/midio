@@ -1,6 +1,6 @@
-window.Midi = window.Midi || {};
+window.Midio = window.Midio || {};
 
-window.Midi.Builder = function (){
+window.Midio.Builder = function (){
 
     return {
         buildDetail: buildDetail,
@@ -11,7 +11,7 @@ window.Midi.Builder = function (){
 
     function buildMidiDetails (input) {
 
-        var builder = new Midi.Builder();
+        var builder = new Midio.Builder();
 
         var output = { 
             header: { 
@@ -36,7 +36,7 @@ window.Midi.Builder = function (){
 
     function buildMidiMessages (input) {
 
-        var builder = new Midi.Builder();
+        var builder = new Midio.Builder();
 
         var output = { 
             header: { 

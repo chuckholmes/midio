@@ -1,3 +1,5 @@
+window.Midio = window.Midio || {};
+
 function BufferReader (buffer) {
                                    
     var _view = new DataView(buffer);               

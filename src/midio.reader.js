@@ -1,6 +1,6 @@
-window.Midi = window.Midi || {};
+window.Midio = window.Midio || {};
 
-window.Midi.Reader = (function (){
+window.Midio.Reader = (function (){
 
     return {
         read: read,
