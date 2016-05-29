@@ -3,7 +3,7 @@ describe("Midio.buffer.Writer", function (){
     it('should write Int8', function (){
 
        var input = [-127, 127];
-        var writer = new BufferWriter();
+        var writer = new Midio.BufferWriter();
 
         writer.writeInt8(input[0]);
         writer.writeInt8(input[1]);
@@ -18,7 +18,7 @@ describe("Midio.buffer.Writer", function (){
     it('should write Uint8', function (){
 
         var input = [0, 255];  
-        var writer = new BufferWriter();
+        var writer = new Midio.BufferWriter();
 
         writer.writeUint8(input[0]);
         writer.writeUint8(input[1]);
@@ -33,7 +33,7 @@ describe("Midio.buffer.Writer", function (){
     it('should write Int16', function (){
 
         var input = [32767, -32768];
-        var writer = new BufferWriter();
+        var writer = new Midio.BufferWriter();
 
         writer.writeInt16(input[0]);
         writer.writeInt16(input[1]);
@@ -48,7 +48,7 @@ describe("Midio.buffer.Writer", function (){
     it('should write Uint16', function (){
 
         var input = [0, 65,534];
-        var writer = new BufferWriter();
+        var writer = new Midio.BufferWriter();
                 
         writer.writeUint16(input[0]);
         writer.writeUint16(input[1]);
@@ -63,7 +63,7 @@ describe("Midio.buffer.Writer", function (){
     it('should write Int32', function (){
 
         var input = [-2147483647, 2147483647];
-        var writer = new BufferWriter();
+        var writer = new Midio.BufferWriter();
 
         writer.writeInt32(input[0]);
         writer.writeInt32(input[1]);
@@ -78,7 +78,7 @@ describe("Midio.buffer.Writer", function (){
     it('should write Uint32', function (){
 
         var input = [0, 4294967295];
-        var writer = new BufferWriter();
+        var writer = new Midio.BufferWriter();
 
         writer.writeUint32(input[0]);
         writer.writeUint32(input[1]);
@@ -93,7 +93,7 @@ describe("Midio.buffer.Writer", function (){
     it('should write Float32', function (){
 
         var input = [0, 10];
-        var writer = new BufferWriter();
+        var writer = new Midio.BufferWriter();
 
         writer.writeFloat32(input[0]);
         writer.writeFloat32(input[1]);
@@ -108,7 +108,7 @@ describe("Midio.buffer.Writer", function (){
     it('should write Float64', function (){
 
         var input = [0, 10];
-        var writer = new BufferWriter();
+        var writer = new Midio.BufferWriter();
 
         writer.writeFloat64(input[0]);
         writer.writeFloat64(input[1]);
@@ -124,10 +124,10 @@ describe("Midio.buffer.Writer", function (){
 
         var input = 160000;
 
-        var writer = new BufferWriter();
+        var writer = new Midio.BufferWriter();
         writer.writeVarInt(input);
 
-        var reader = new BufferReader(writer.getBuffer());
+        var reader = new Midio.BufferReader(writer.getBuffer());
         var output = reader.readVarInt();
 
         expect(output).toBe(input);
@@ -137,10 +137,10 @@ describe("Midio.buffer.Writer", function (){
 
         var input = 'Hello World';
 
-        var writer = new BufferWriter();
+        var writer = new Midio.BufferWriter();
         writer.writeString(input);
 
-        var reader = new BufferReader(writer.getBuffer());
+        var reader = new Midio.BufferReader(writer.getBuffer());
         var output = reader.readString(input.length);
 
         expect(output).toBe(input);
@@ -150,7 +150,7 @@ describe("Midio.buffer.Writer", function (){
 
         var input =  new Uint8Array([0x01, 0x02, 0x03, 0x04, 0x05]);
 
-        var writer = new BufferWriter(); 
+        var writer = new Midio.BufferWriter(); 
         writer.writeBuffer(input.buffer);
 
         var output = new Uint8Array(writer.getBuffer());

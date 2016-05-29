@@ -62,7 +62,7 @@ window.Midio.Builder = function (){
     function buildDetail (message) {
 
         var detail = {};
-        var reader = (message.data) ? new BufferReader(message.data) : null;                                
+        var reader = (message.data) ? new Midio.BufferReader(message.data) : null;                                
 
         switch (message.type) {
 
@@ -185,7 +185,7 @@ window.Midio.Builder = function (){
 
     function buildMessage (detail) {
 
-        var writer = new BufferWriter();
+        var writer = new Midio.BufferWriter();
         var message = {};
 
         switch (detail.type) {

@@ -16,7 +16,7 @@ describe('Midio.Writer', function () {
        
         var buffer = writer.writeChunk(id, input);
                                                 
-        var chunk = reader.readChunk(new BufferReader(buffer));
+        var chunk = reader.readChunk(new Midio.BufferReader(buffer));
         
         var inputBytes = new Uint8Array(input);
         var outputBytes = new Uint8Array(chunk.buffer);

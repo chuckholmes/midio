@@ -10,7 +10,7 @@ window.Midio.Writer = (function (){
     
     function write(midi) {
         
-        var writer = new BufferWriter();
+        var writer = new Midio.BufferWriter();
 
         // write header
         var buffer = writeChunk('MThd', writeHeader(midi.header));
@@ -27,7 +27,7 @@ window.Midio.Writer = (function (){
 
     function writeChunk(id, buffer) {
 
-        var writer = new BufferWriter();
+        var writer = new Midio.BufferWriter();
 
         writer.writeString(id);
         writer.writeInt32(buffer.byteLength);
@@ -38,7 +38,7 @@ window.Midio.Writer = (function (){
 
     function writeHeader (header) {
 
-        var writer = new BufferWriter();
+        var writer = new Midio.BufferWriter();
 
         writer.writeInt16(header.type);
         writer.writeInt16(header.trackCount);
@@ -49,7 +49,7 @@ window.Midio.Writer = (function (){
 
     function writeTrack (track) {
 
-        var writer = new BufferWriter();
+        var writer = new Midio.BufferWriter();
 
         track.forEach(function (message){
 

@@ -12,7 +12,7 @@ window.Midio.Reader = (function (){
     function read (buffer) {
 
         var midi = {header: null, tracks:[]};
-        var reader = new BufferReader(buffer);
+        var reader = new Midio.BufferReader(buffer);
 
         // read header
         var headerChunk = readChunk(reader);
@@ -53,7 +53,7 @@ window.Midio.Reader = (function (){
 
     function readHeader (buffer) {
 
-        var reader = new BufferReader(buffer);
+        var reader = new Midio.BufferReader(buffer);
 
         var type = reader.readInt16();
         var trackCount = reader.readInt16();
@@ -71,7 +71,7 @@ window.Midio.Reader = (function (){
         var messages = [];
         var message, delta, status;
 
-        var reader = new BufferReader(buffer);
+        var reader = new Midio.BufferReader(buffer);
 
         while (reader.getPosition() < reader.buffer.byteLength) {
 

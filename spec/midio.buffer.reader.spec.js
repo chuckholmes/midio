@@ -5,7 +5,7 @@ describe("Mido.buffer.Reader", function (){
 
        var input = [-127, 127];
        var array = new Int8Array(input);
-       var reader = new BufferReader(array.buffer);
+       var reader = new Midio.BufferReader(array.buffer);
 
        expect(reader.readInt8()).toBe(input[0]);
        expect(reader.readInt8()).toBe(input[1]);
@@ -15,7 +15,7 @@ describe("Mido.buffer.Reader", function (){
 
        var input = [0, 255];
        var array = new Uint8Array(input);
-       var reader = new BufferReader(array.buffer);
+       var reader = new Midio.BufferReader(array.buffer);
 
        expect(reader.readUint8()).toBe(input[0]);
        expect(reader.readUint8()).toBe(input[1]);
@@ -29,7 +29,7 @@ describe("Mido.buffer.Reader", function (){
        view.setInt16(0, input[0]);
        view.setInt16(2, input[1]);
 
-       var reader = new BufferReader(view.buffer);
+       var reader = new Midio.BufferReader(view.buffer);
 
        expect(reader.readInt16()).toBe(input[0]);
        expect(reader.readInt16()).toBe(input[1]);
@@ -43,7 +43,7 @@ describe("Mido.buffer.Reader", function (){
        view.setUint16(0, input[0]);
        view.setUint16(2, input[1]);
 
-       var reader = new BufferReader(view.buffer);
+       var reader = new Midio.BufferReader(view.buffer);
 
        expect(reader.readUint16()).toBe(input[0]);
        expect(reader.readUint16()).toBe(input[1]);
@@ -57,7 +57,7 @@ describe("Mido.buffer.Reader", function (){
        view.setInt32(0, input[0]);
        view.setInt32(4, input[1]);
 
-       var reader = new BufferReader(view.buffer);
+       var reader = new Midio.BufferReader(view.buffer);
 
        expect(reader.readInt32()).toBe(input[0]);
        expect(reader.readInt32()).toBe(input[1]);
@@ -71,7 +71,7 @@ describe("Mido.buffer.Reader", function (){
        view.setUint32(0, input[0]);
        view.setUint32(4, input[1]);
 
-       var reader = new BufferReader(view.buffer);
+       var reader = new Midio.BufferReader(view.buffer);
 
        expect(reader.readUint32()).toBe(input[0]);
        expect(reader.readUint32()).toBe(input[1]);
@@ -85,7 +85,7 @@ describe("Mido.buffer.Reader", function (){
        view.setFloat32(0, input[0]);
        view.setFloat32(4, input[1]);
 
-       var reader = new BufferReader(view.buffer);
+       var reader = new Midio.BufferReader(view.buffer);
 
        expect(reader.readFloat32()).toBe(input[0]);
        expect(reader.readFloat32()).toBe(input[1]);
@@ -99,7 +99,7 @@ describe("Mido.buffer.Reader", function (){
        view.setFloat64(0, input[0]);
        view.setFloat64(8, input[1]);
 
-       var reader = new BufferReader(view.buffer);
+       var reader = new Midio.BufferReader(view.buffer);
 
        expect(reader.readFloat64()).toBe(input[0]);
        expect(reader.readFloat64()).toBe(input[1]);
@@ -109,10 +109,10 @@ describe("Mido.buffer.Reader", function (){
 
         var input = 160000;
        
-        var writer = new BufferWriter();
+        var writer = new Midio.BufferWriter();
         writer.writeVarInt(input);
 
-        var reader = new BufferReader(writer.getBuffer());
+        var reader = new Midio.BufferReader(writer.getBuffer());
         var output = reader.readVarInt();
 
         expect(output).toBe(input);
@@ -123,7 +123,7 @@ describe("Mido.buffer.Reader", function (){
         var input = "hello world";
         
         var buffer = Buffer.utils.byteStringToBuffer(input);
-        var reader = new BufferReader(buffer);        
+        var reader = new Midio.BufferReader(buffer);        
         var output = reader.readString(buffer.byteLength);
 
         expect(output).toBe(input);

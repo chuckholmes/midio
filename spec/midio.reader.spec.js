@@ -13,7 +13,7 @@ describe('Midio.Reader', function (){
     
     it("should read Chunk", function () {
         
-        var bufferReader = new BufferReader(_buffer);        
+        var bufferReader = new Midio.BufferReader(_buffer);        
         var midiReader = new Midio.Reader();
         var chunk = midiReader.readChunk(bufferReader);
         
