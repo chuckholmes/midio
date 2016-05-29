@@ -1,4 +1,4 @@
-describe("Buffer.Writer", function (){
+describe("Midio.buffer.Writer", function (){
 
     it('should write Int8', function (){
 

@@ -1,5 +1,5 @@
 
-describe("Buffer.Reader", function (){
+describe("Mido.buffer.Reader", function (){
 
     it("should read Int8", function () {
 
