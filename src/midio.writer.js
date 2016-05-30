@@ -1,6 +1,8 @@
 window.Midio = window.Midio || {};
 
-window.Midio.Writer = (function (){        
+window.Midio.Writer = (function (){
+    
+    var _builder = new Midio.Builder();
     
     return {
         write: write,
@@ -51,7 +53,9 @@ window.Midio.Writer = (function (){
 
         var writer = new Midio.BufferWriter();
 
-        track.forEach(function (message){
+        track.forEach(function (detail){
+
+            var message = _builder.buildMessage(detail);
 
             if (message.channel !== undefined) {
                 writeShortMessage(writer, message);

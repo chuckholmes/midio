@@ -4,63 +4,58 @@ describe('Midio.Builder', function () {
     var _binary = window.atob(_b64);   
     var _buffer = Buffer.utils.byteStringToBuffer(_binary);  
 
-    it('should build Detail', function () {
+    var _builder = new Midio.Builder();
+    var _reader = new Midio.Reader();
 
-        var builder = new Midio.Builder();
-        var reader = new Midio.Reader();
-        var input = reader.read(_buffer);
+    it('should build Detail', function () {
+        
+        var input = _reader.read(_buffer);
         var track = input.tracks[0];
 
-        var details = [];
+        //var details = [];
 
-        track.forEach(function (message) {
-            var detail = builder.buildDetail(message);
-            details.push(detail);
-           //console.log(detail); 
+        //track.forEach(function (message) {
+        //    var detail = _builder.buildDetail(message);
+        //    details.push(detail);
+        //});
+
+        track.forEach(function (detail) {
+           var message = _builder.buildMessage(detail);
         });
 
-        details.forEach(function (detail) {
-           var message = builder.buildMessage(detail);
-           //console.log(message); 
-        });
-
-        expect(typeof builder).toBe('object');
+        expect(typeof _builder).toBe('object');
     });
 
     it('should build Message', function(){ 
 
-        var reader = new Midio.Reader();
-        var input = reader.read(_buffer);
-        var builder = new Midio.Builder();
-
-        var detail = builder.buildMidiDetails(input);
-        //console.log(detail);
+        var input = _reader.read(_buffer);
+        var detail = _builder.buildMidiDetails(input);
 
         expect(detail.tracks.length).toBe(1);
 
-        var messages = builder.buildMidiMessages(detail);
+        //var messages = _builder.buildMidiMessages(detail);
         //console.log(messages);
 
-        var timeSigDetail = findMessage(detail.tracks[0], 'time-signature')[0];
+        //var timeSigDetail = findMessage(detail.tracks[0], 'time-signature')[0];
         //console.log(timeSigDetail);
 
-        var timeSigMessage = findMessage(messages.tracks[0], 0x58)[0];
+        //var timeSigMessage = findMessage(messages.tracks[0], 0x58)[0];
         //console.log(timeSigMessage);
 
-        var output = builder.buildDetail(timeSigMessage);
+        //var output = _builder.buildDetail(timeSigMessage);
         //console.log(output);
     });
     
     
     it('should build Pitch Bend', function (){
 
-        var builder = new Midio.Builder();
+        //var builder = new Midio.Builder();
 
         var minValue = 0;
         var maxValue = 16383;
         var midValue = 8192;
 
-        var result = builder.buildMessage({type: 'pitch-bend', value: maxValue});
+        var result = _builder.buildMessage({type: 'pitch-bend', value: maxValue});
         expect(result.param1).toBe(127);
         expect(result.param2).toBe(127);
         

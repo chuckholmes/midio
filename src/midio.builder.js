@@ -25,7 +25,7 @@ window.Midio.Builder = function (){
         input.tracks.forEach(function (trkIn) {
             var trkOut = [];
             trkIn.forEach(function (msgIn) {
-                var msgOut = builder.buildDetail(msgIn);                
+                var msgOut = builder.buildDetail(msgIn);
                 if (msgOut) trkOut.push(msgOut);
             });
             output.tracks.push(trkOut);
@@ -100,11 +100,11 @@ window.Midio.Builder = function (){
                 detail.text = reader.readString(message.length);
                 break;
             case 0x20:
-                detail.type = 'midi-channel-prefix';
+                detail.type = 'channel-prefix';
                 detail.channelNumber = reader.readInt8();
                 break;
             case 0x2f:
-                detail.type = 'end-of-track';
+                detail.type = 'end-track';
                 break;
             case 0x51:
                 detail.type = 'set-tempo';
@@ -231,12 +231,12 @@ window.Midio.Builder = function (){
                 message.data = writer.writeString(detail.text).getBuffer();
                 message.length = message.data.byteLength;
                 break;
-            case 'midi-channel-prefix':
+            case 'channel-prefix':
                 message.type = 0x20;
                 message.data = writer.writeInt8(detail.channelNumber).getBuffer();
                 message.length = message.data.byteLength;
                 break;
-            case 'end-of-track':
+            case 'end-track':
                 message.type = 0x2f;
                 message.data = null;
                 message.length = 0;

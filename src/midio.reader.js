@@ -2,6 +2,8 @@ window.Midio = window.Midio || {};
 
 window.Midio.Reader = (function (){
 
+    var _builder = new Midio.Builder();
+
     return {
         read: read,
         readChunk: readChunk,
@@ -85,7 +87,8 @@ window.Midio.Reader = (function (){
                 message = readChannelMessage(delta, status, reader);
             }
 
-            messages.push(message);
+            var detail = _builder.buildDetail(message);
+            messages.push(detail);
         }
 
         return messages;

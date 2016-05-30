@@ -28,18 +28,20 @@
                 { type: "program-change", programNumber: 36, channel: 0, delta: 0 },
                 { type: "channel-aftertouch", amount: 127, channel: 0, delta: 0 },
                 { type: "pitch-bend", value: 16383, channel: 0, delta: 0 },
-                { type: "midi-channel-prefix", channelNumber: 10 },
-                { type: "end-of-track" }
+                { type: "channel-prefix", channelNumber: 10 },
+                { type: "end-track" }
             ]
         ]
     };
     
+    // create midio service
+    var midio = new Midio.Service();
+    
     // write to buffer
-    var buffer = Midio.write(midi);
+    var buffer = midio.write(midi);
 
-    // create a blob
-    var btyeArray = new Uint8Array(buffer);
-    var blob = new Blob([inputArray], {type: 'application/octet-binary'});
+    // create a blob    
+    var blob = new Blob([new Uint8Array(buffer)], {type: 'application/octet-binary'});
     
     // create download
     var url = window.URL.createObjectURL(blob); 

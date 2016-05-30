@@ -23,11 +23,7 @@ describe('Midio.Writer', function () {
                 
         expect(chunk.id).toBe(id);
         expect(chunk.length).toBe(input.byteLength);
-        
-        for (var i; i < inputBytes.byteLength; i++ ) {
-            expect(outputBytes[i]).toBe(inputBytes[i]);    
-        }        
-                                                                 
+        expect(compareBytes(inputBytes, outputBytes)).toBe(true);
     });
     
     it('should write Header', function(){
@@ -57,19 +53,19 @@ describe('Midio.Writer', function () {
     it('should write File', function () {
         
         var inputBuffer = _buffer;                
-        var inputMessages = reader.read(inputBuffer);                        
-        var inputDetails = builder.buildMidiDetails(inputMessages);        
+        var inputDetails = reader.read(inputBuffer);                        
+        //var inputDetails = builder.buildMidiDetails(inputMessages);
                         
-        var outputMessages = builder.buildMidiMessages(inputDetails);
-        var outputDetails = builder.buildMidiDetails(outputMessages);        
-        var outputBuffer = writer.write(outputMessages);
+        //var outputMessages = builder.buildMidiMessages(inputDetails);
+        //var outputDetails = builder.buildMidiDetails(outputMessages);        
+        var outputBuffer = writer.write(inputDetails);
         
         
-        var isValid = true;
-        for (var i = 0; i<inputDetails.tracks[0].length; i++ ) {
-            isValid = (JSON.stringify(inputDetails.tracks[0][i]) == JSON.stringify(outputDetails.tracks[0][i]));
+        //var isValid = true;
+        //for (var i = 0; i<inputDetails.tracks[0].length; i++ ) {
+        //    isValid = (JSON.stringify(inputDetails.tracks[0][i]) == JSON.stringify(outputDetails.tracks[0][i]));
             //console.log(i + ' : ' + isValid);    
-        }
+       //}
                                 
         expect(compareBytes(inputBuffer, outputBuffer)).toBe(true);
         
@@ -123,15 +119,14 @@ describe('Midio.Writer', function () {
                     { type: "program-change", programNumber: 36, channel: 0, delta: 0 },
                     { type: "channel-aftertouch", amount: 127, channel: 0, delta: 0 },
                     { type: "pitch-bend", value: 16383, channel: 0, delta: 0 },
-                    { type: "midi-channel-prefix", channelNumber: 10 },
-                    { type: "end-of-track" }
+                    { type: "channel-prefix", channelNumber: 10 },
+                    { type: "end-track" }
                 ]
             ]
         };
 
-        // write midi
-        var outputMessages = builder.buildMidiMessages(midi);
-        var outputBuffer = writer.write(outputMessages);
+        // write midi        
+        var outputBuffer = writer.write(midi);
 
         // create blob
         var inputArray = new Uint8Array(outputBuffer);
@@ -140,7 +135,7 @@ describe('Midio.Writer', function () {
         expect(blob.size).toBe(outputBuffer.byteLength);
 
         // download blob
-        //downloadBlob(blob, 'shouldWriteDetails.mid');
+        downloadBlob(blob, 'shouldWriteDetails.mid');
 
     });
 

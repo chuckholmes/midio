@@ -20,7 +20,7 @@ r = read, w = write
 (r/w) marker  
 (r/w) cue-point  
 (r/w) channel-prefix  
-(r/w) end-of-track  
+(r/w) end-track  
 (r/w) set-tempo  
 -----  smtp  
 (r/w) time-signature  
@@ -29,13 +29,25 @@ r = read, w = write
 
 
 #### Namespace
-midio  
-midio.builder  
-midio.reader  
-midio.writer  
+
+midio.service  
+midio.builder
+midio.reader
+midio.writer
+
 midio.buffer.reader  
 midio.buffer.writer  
 
+
+
+```javascript
+
+    var midi = midio.read(buffer);      
+
+
+
+
+```
 
 
 
