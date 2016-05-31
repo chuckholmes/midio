@@ -4,7 +4,7 @@
 ```javascript
 
     var midi = {
-        header: { type: 1, timeDivision: 240, trackCount: 1 },
+        header: { type: 1, timeDivision: 96, trackCount: 1 },
         tracks: [
             [
                 // meta messages
@@ -34,11 +34,11 @@
         ]
     };
     
-    // create midio service
-    var midio = new Midio.Service();
+    // create midi writer
+    var writer = new Midio.Writer();
     
     // write to buffer
-    var buffer = midio.write(midi);
+    var buffer = writer.write(midi);
 
     // create a blob    
     var blob = new Blob([new Uint8Array(buffer)], {type: 'application/octet-binary'});

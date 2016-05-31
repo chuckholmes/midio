@@ -95,7 +95,7 @@ describe('Midio.Writer', function () {
     it('should write Details', function () {
 
         var midi = {
-            header: { type: 1, timeDivision: 240, trackCount: 1 },
+            header: { type: 1, timeDivision: 96, trackCount: 1 },
             tracks: [
                 [
                     // meta messages
@@ -125,17 +125,16 @@ describe('Midio.Writer', function () {
             ]
         };
 
-        // write midi        
-        var outputBuffer = writer.write(midi);
+        // write midi
+        var buffer = writer.write(midi);
 
         // create blob
-        var inputArray = new Uint8Array(outputBuffer);
-        var blob = new Blob([inputArray], {type: 'application/octet-binary'});
+        var blob = new Blob([new Uint8Array(buffer)], {type: 'application/octet-binary'});
 
-        expect(blob.size).toBe(outputBuffer.byteLength);
+        expect(blob.size).toBe(buffer.byteLength);
 
         // download blob
-        downloadBlob(blob, 'shouldWriteDetails.mid');
+        //downloadBlob(blob, 'shouldWriteDetails.mid');
 
     });
 

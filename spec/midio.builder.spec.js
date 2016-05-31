@@ -29,9 +29,9 @@ describe('Midio.Builder', function () {
     it('should build Message', function(){ 
 
         var input = _reader.read(_buffer);
-        var detail = _builder.buildMidiDetails(input);
+        var output = _builder.buildMidiMessages(input);
 
-        expect(detail.tracks.length).toBe(1);
+        expect(output.tracks.length).toBe(1);
 
         //var messages = _builder.buildMidiMessages(detail);
         //console.log(messages);
