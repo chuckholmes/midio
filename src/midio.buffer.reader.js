@@ -113,4 +113,4 @@ window.Midio.BufferReader = function (buffer) {
 		}
 	}        
 
-}
+};
