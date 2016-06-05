@@ -3,6 +3,7 @@ window.Midio = window.Midio || {};
 window.Midio.Reader = (function (){
 
     var _builder = new Midio.Builder();
+    var _lastStatus = null;
 
     return {
         read: read,
@@ -83,7 +84,7 @@ window.Midio.Reader = (function (){
             if ((status & 0xf0) == 0xf0) {
                 message = readMetaMessage(reader);
             }
-            else {
+            else {                               
                 message = readChannelMessage(delta, status, reader);
             }
 
@@ -113,10 +114,21 @@ window.Midio.Reader = (function (){
 
     function readChannelMessage(delta, status, reader) {
 
+        var param1 = null;
+        var param2 = null;
+        
+        if ((status & 0x80) === 0) {
+            param1 = status;
+            status = _lastStatus;
+        } else {
+            param1 = reader.readUint8();
+            _lastStatus = status;
+        }
+
         var channel = status & 0x0f;
         var type = status >> 4;
-        var param1 = reader.readUint8();
-        var param2 = null;
+
+        if (!param1) param1 = reader.readUint8();
 
         if (hasTwoParams(type)) {
             param2 = reader.readUint8();
