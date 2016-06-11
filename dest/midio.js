@@ -1,14 +1,14 @@
 window.Midio = window.Midio || {};
 
 window.Midio.BufferReader = function (buffer) {
-                                   
-    var _view = new DataView(buffer);               
+
+    var _view = new DataView(buffer);
     var _position = 0;
-                
-    return {        
-        buffer: buffer,                
-        dataView: _view,        
-        getPosition: getPosition,                        
+
+    return {
+        buffer: buffer,
+        dataView: _view,
+        getPosition: getPosition,
         readInt8: readInt8,
         readUint8: readUint8,
         readInt16: readInt16,
@@ -16,112 +16,109 @@ window.Midio.BufferReader = function (buffer) {
         readInt32: readInt32,
         readUint32: readUint32,
         readFloat32: readFloat32,
-        readFloat64: readFloat64,                
+        readFloat64: readFloat64,
         readBuffer: readBuffer,
         readString: readString,
-        readVarInt: readVarInt           
-    };        
-        
-    
+        readVarInt: readVarInt
+    };
+
     function getPosition() {
         return _position;
     }
-    
+
     function readBuffer(length) {
         result = buffer.slice(_position, (_position+length));
         _position += length;
-        return result;        
-    }
-    
-    function readString(length) {
-        
-        var result = '';        
-        
-        for (var i=_position; i<(_position+length); i++) {
-            result += String.fromCharCode(_view.getUint8(i));                       
-        }
-        
-        _position += length;
-        return result;
-    }
-    
-    function readInt8() {
-        var result = _view.getInt8(_position);
-        _position += 1;        
-        return result;
-    }    
-    
-    function readUint8() {        
-        var result = _view.getUint8(_position);
-        _position += 1;
-        return result;
-    }    
-    
-    function readInt16(littleEndian) {        
-        var result = _view.getInt16(_position, littleEndian || false);
-        _position += 2;        
-        return result;
-    }
-        
-    function readUint16(littleEndian) {        
-        var result = _view.getUint16(_position, littleEndian || false);
-        _position += 2;        
         return result;
     }
 
-    function readInt32(littleEndian) {        
+    function readString(length) {
+
+        var result = '';
+
+        for (var i=_position; i<(_position+length); i++) {
+            result += String.fromCharCode(_view.getUint8(i));
+        }
+
+        _position += length;
+        return result;
+    }
+
+    function readInt8() {
+        var result = _view.getInt8(_position);
+        _position += 1;
+        return result;
+    }
+
+    function readUint8() {
+        var result = _view.getUint8(_position);
+        _position += 1;
+        return result;
+    }
+
+    function readInt16(littleEndian) {
+        var result = _view.getInt16(_position, littleEndian || false);
+        _position += 2;
+        return result;
+    }
+
+    function readUint16(littleEndian) {
+        var result = _view.getUint16(_position, littleEndian || false);
+        _position += 2;
+        return result;
+    }
+
+    function readInt32(littleEndian) {
         var result = _view.getInt32(_position, littleEndian || false);
-        _position += 4;        
+        _position += 4;
         return result;
     }
 
     function readUint32(littleEndian) {        
         var result = _view.getUint32(_position, littleEndian | false);
-        _position += 4;        
+        _position += 4;
         return result;
     }
 
     function readFloat32(littleEndian) {
         var result = _view.getFloat32(_position, littleEndian | false);
-        _position += 4;        
-        return result;
-    }
-        
-    function readFloat64(littleEndian) {
-        var result = _view.getFloat64(_position, littleEndian | false);
-        _position += 8;        
+        _position += 4;
         return result;
     }
 
-    	
+    function readFloat64(littleEndian) {
+        var result = _view.getFloat64(_position, littleEndian | false);
+        _position += 8;
+        return result;
+    }
+
 	function readVarInt() {
 
         // read a MIDI-style variable-length integer (big-endian value in groups of 7 bits,
         // with top bit set to signify that another byte follows)       
-         
-		var result = 0;
-        
-		while (true) {
-			var b = readInt8();
-			if (b & 0x80) {
-				result += (b & 0x7f);
-				result <<= 7;
-			} else {
-				/* b is the last byte */
-				return result + b;
-			}
-		}
-	}        
 
+        var result = 0;
+        
+        while (true) {
+            var b = readInt8();
+            if (b & 0x80) {
+                result += (b & 0x7f);
+                result <<= 7;
+            } else {
+                /* b is the last byte */
+                return result + b;
+            }
+        }
+    }
 };
 window.Midio = window.Midio || {};
 
 window.Midio.BufferWriter = function (buffer) {
-        
+
     var _buffer = buffer || new ArrayBuffer();
     var _position = 0;
-    
-    return {        
+
+    return {
         writeInt8: writeInt8,
         writeUint8: writeUint8,
         writeInt16: writeInt16,
@@ -129,66 +126,66 @@ window.Midio.BufferWriter = function (buffer) {
         writeInt32: writeInt32,
         writeUint32: writeUint32,
         writeFloat32: writeFloat32,
-        writeFloat64: writeFloat64,        
+        writeFloat64: writeFloat64,
         writeVarInt: writeVarInt,
         writeString: writeString,
         writeBuffer: writeBuffer,
         getBuffer: getBuffer
     };
-    
+
     function getBuffer () {
         return _buffer;
     }
-    
+
     function writeInt8(value) {
-                         
-        _buffer = transfer(_buffer, (_buffer.byteLength + 1));        
+
+        _buffer = transfer(_buffer, (_buffer.byteLength + 1));
         new DataView(_buffer).setInt8(_position, value);
         _position += 1;
-        
-        return this;                      
+
+        return this;
     }
-    
+
     function writeUint8(value) {
-                         
+
         _buffer = transfer(_buffer, (_buffer.byteLength + 1));
         new DataView(_buffer).setUint8(_position, value);
         _position += 1;
-        
-        return this;                      
+
+        return this;
     }
-    
+
     function writeInt16(value, littleEndian) {
-        
+
         var int16Length = 2;
-                                
+
         _buffer = transfer(_buffer, (_buffer.byteLength + int16Length));
         new DataView(_buffer).setInt16(_position, value, littleEndian || false);
         _position += int16Length;
-        
-        return this;          
+
+        return this;
     }
-        
+
     function writeUint16(value, littleEndian) {
-        
+
         var uint16Length = 2;
-        
+
         _buffer = transfer(_buffer, (_buffer.byteLength + uint16Length));
         new DataView(_buffer).setUint16(_position, value, littleEndian || false);
         _position += uint16Length;
-        
-        return this;          
-    }    
-    
+
+        return this;
+    }
+
     function writeInt32(value, littleEndian) {
-        
+
         var int32Length = 4;
-        
+
         _buffer = transfer(_buffer, (_buffer.byteLength + int32Length));
         new DataView(_buffer).setInt32(_position, value, littleEndian || false);
         _position += int32Length;
 
-        return this;          
+        return this;
     }
 
     function writeUint32(value, littleEndian) {
@@ -199,7 +196,7 @@ window.Midio.BufferWriter = function (buffer) {
         new DataView(_buffer).setUint32(_position, value, littleEndian);
         _position += uint32Length;
 
-        return this;          
+        return this;
     }
 
     function writeFloat32(value, littleEndian) {
@@ -212,11 +209,11 @@ window.Midio.BufferWriter = function (buffer) {
 
         return this;
     }
-    
+
     function writeFloat64(value, littleEndian) {
 
         var float64Length = 8;
-        
+
         _buffer = transfer(_buffer, (_buffer.byteLength + float64Length));
         new DataView(_buffer).setFloat64(_position, value, littleEndian);
         _position += float64Length;
@@ -269,18 +266,18 @@ window.Midio.BufferWriter = function (buffer) {
             view.setUint8(_position, str.charCodeAt(i));
             _position += 1;
         }
-        
+
         return this;
     }
 
     function writeBuffer(buffer) {
 
-        var length = buffer.byteLength;        
+        var length = buffer.byteLength;
         var byteArray = new Uint8Array(buffer);
-        
+
         _buffer = transfer(_buffer, (_buffer.byteLength + length));
         var view = new DataView(_buffer);
-        
+
         for (var i = 0; i < length; i++) {
             view.setUint8(_position, byteArray[i]);
             _position += 1;

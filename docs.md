@@ -44,6 +44,15 @@ midio.buffer.writer
 
     var midi = midio.read(buffer);      
 
+    var event = {
+        delta: 0, channel: 9 
+        message: { type: "note-on",  note: 60, velocity: 90 }
+    };
+
+    var track = [
+        { message:{ type: "note-on",  note: 60, velocity: 90 }, channel:0, delta:0 };
+        { message:{ type: "note-off", note: 60, velocity: 90 }, channel:0, delta:120 };
+    ];
 
 
 
