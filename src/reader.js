@@ -144,7 +144,7 @@ window.Midio.Reader = (function (){
     }
 
     function hasTwoParams(type) {
-        // note-off, note-on, note-aftertouch, controller, pitch-bend
+        // note-off, note-on, note-aftertouch, control-change, pitch-bend
         return [0x08, 0x09, 0x0a, 0x0b, 0x0e].includes(type);
     }
 

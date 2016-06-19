@@ -15,12 +15,12 @@ r = read, w = write
 (r/w) text  
 (r/w) copyright  
 (r/w) track-name  
-(r/w) instrument  
+(r/w) instrument-name
 (r/w) lyric  
 (r/w) marker  
 (r/w) cue-point  
 (r/w) channel-prefix  
-(r/w) end-track  
+(r/w) end-of-track  
 (r/w) set-tempo  
 -----  smtp  
 (r/w) time-signature  

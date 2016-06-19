@@ -84,7 +84,7 @@ window.Midio.Builder = function (){
                 detail.text = reader.readString(message.length);
                 break;
             case 0x04:
-                detail.type = 'instrument';
+                detail.type = 'instrument-name';
                 detail.text = reader.readString(message.length);
                 break;
             case 0x05:
@@ -101,14 +101,14 @@ window.Midio.Builder = function (){
                 break;
             case 0x20:
                 detail.type = 'channel-prefix';
-                detail.channelNumber = reader.readInt8();
+                detail.value = reader.readInt8();
                 break;
             case 0x2f:
-                detail.type = 'end-track';
+                detail.type = 'end-of-track';
                 break;
             case 0x51:
                 detail.type = 'set-tempo';
-                detail.microsecondsPerBeat = ((reader.readUint8() << 16) + (reader.readUint8() << 8) + reader.readUint8());
+                detail.tempo = ((reader.readUint8() << 16) + (reader.readUint8() << 8) + reader.readUint8());
                 break;
             case 0x54:
                 detail.type = 'smpte-offset';
@@ -151,20 +151,20 @@ window.Midio.Builder = function (){
             case 0x0a:
                 detail.type = 'note-aftertouch';
                 detail.note = message.param1;
-                detail.amount = message.param2;
+                detail.value = message.param2;
                 break;
             case 0x0b:
-                detail.type = 'controller';
-                detail.controllerType = message.param1;
+                detail.type = 'control-change';
+                detail.control = message.param1;
                 detail.value = message.param2;
                 break;
             case 0x0c:
                 detail.type = 'program-change';
-                detail.programNumber = message.param1;
+                detail.program = message.param1;
                 break;
             case 0x0d:
                 detail.type = 'channel-aftertouch';
-                detail.amount = message.param1;
+                detail.value = message.param1;
                 break;
             case 0x0e:
                 detail.type = 'pitch-bend';
@@ -211,7 +211,7 @@ window.Midio.Builder = function (){
                 message.data = writer.writeString(detail.text).getBuffer();
                 message.length = message.data.byteLength;
                 break;
-            case 'instrument':
+            case 'instrument-name':
                 message.type = 0x04;
                 message.data = writer.writeString(detail.text).getBuffer();
                 message.length = message.data.byteLength;
@@ -233,17 +233,17 @@ window.Midio.Builder = function (){
                 break;
             case 'channel-prefix':
                 message.type = 0x20;
-                message.data = writer.writeInt8(detail.channelNumber).getBuffer();
+                message.data = writer.writeInt8(detail.value).getBuffer();
                 message.length = message.data.byteLength;
                 break;
-            case 'end-track':
+            case 'end-of-track':
                 message.type = 0x2f;
                 message.data = null;
                 message.length = 0;
                 break;                
             case 'set-tempo':
                 message.type = 0x51;
-                var hex = detail.microsecondsPerBeat.toString(16);
+                var hex = detail.tempo.toString(16);
                 writer.writeUint8(parseInt(hex.substring(0, 1), 16));
                 writer.writeUint8(parseInt(hex.substring(1, 3), 16));
                 writer.writeUint8(parseInt(hex.substring(3, 5), 16));
@@ -282,21 +282,21 @@ window.Midio.Builder = function (){
             case 'note-aftertouch':
                 message.type = 0x0a;
                 message.param1 = detail.note;
-                message.param2 = detail.amount;
+                message.param2 = detail.value;
                 break;
-            case 'controller':
+            case 'control-change':
                 message.type = 0x0b;
-                message.param1 = detail.controllerType;
+                message.param1 = detail.control;
                 message.param2 = detail.value;
                 break;
             case 'program-change':
                 message.type = 0x0c;
-                message.param1 = detail.programNumber;
+                message.param1 = detail.program;
                 message.param2 = null;
                 break;
             case 'channel-aftertouch':
                 message.type = 0x0d;
-                message.param1 = detail.amount;
+                message.param1 = detail.value;
                 message.param2 = null;
                 break;
                 
