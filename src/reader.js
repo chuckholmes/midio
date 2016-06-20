@@ -16,8 +16,6 @@ window.Midio.Reader = (function (){
 
         var midi = {header: null, tracks:[]};
         var reader = new Midio.BufferReader(buffer);
-
-        // read header
         var headerChunk = readChunk(reader);
                
         if (headerChunk.id !== 'MThd') {
@@ -28,13 +26,12 @@ window.Midio.Reader = (function (){
 
         // read tracks
         for (var i = 0; i < midi.header.trackCount; i++) {
-
+            
             var trackChunk = readChunk(reader); 
-
+            
             if (trackChunk.id !== 'MTrk') {
                 throw 'Invalid Track';
             }
-
             midi.tracks.push(readTrack(trackChunk.buffer));
         }
 
@@ -144,7 +141,7 @@ window.Midio.Reader = (function (){
     }
 
     function hasTwoParams(type) {
-        // note-off, note-on, note-aftertouch, control-change, pitch-bend
+        // note-off, note-on, key-pressure, control-change, pitch-bend
         return [0x08, 0x09, 0x0a, 0x0b, 0x0e].includes(type);
     }
 

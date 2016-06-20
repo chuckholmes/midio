@@ -69,7 +69,7 @@ window.Midio.Builder = function (){
             // meta messages
             case 0x00:
                 detail.type = 'sequence-number';
-                detail.number = reader.readInt16();
+                detail.value = reader.readInt16();
                 break;
             case 0x01:
                 detail.type = 'text';
@@ -149,7 +149,7 @@ window.Midio.Builder = function (){
                 detail.velocity = message.param2;
                 break;
             case 0x0a:
-                detail.type = 'note-aftertouch';
+                detail.type = 'key-pressure';
                 detail.note = message.param1;
                 detail.value = message.param2;
                 break;
@@ -160,10 +160,10 @@ window.Midio.Builder = function (){
                 break;
             case 0x0c:
                 detail.type = 'program-change';
-                detail.program = message.param1;
+                detail.value = message.param1;
                 break;
             case 0x0d:
-                detail.type = 'channel-aftertouch';
+                detail.type = 'channel-pressure';
                 detail.value = message.param1;
                 break;
             case 0x0e:
@@ -193,7 +193,7 @@ window.Midio.Builder = function (){
             // meta messages
             case 'sequence-number':
                 message.type = 0x00;
-                message.data = writer.writeInt16(detail.number).getBuffer();
+                message.data = writer.writeInt16(detail.value).getBuffer();
                 message.length = message.data.byteLength;
                 break;
             case 'text':
@@ -279,7 +279,7 @@ window.Midio.Builder = function (){
                 message.param1 = detail.note;
                 message.param2 = detail.velocity;
                 break;
-            case 'note-aftertouch':
+            case 'key-pressure':
                 message.type = 0x0a;
                 message.param1 = detail.note;
                 message.param2 = detail.value;
@@ -291,10 +291,10 @@ window.Midio.Builder = function (){
                 break;
             case 'program-change':
                 message.type = 0x0c;
-                message.param1 = detail.program;
+                message.param1 = detail.value;
                 message.param2 = null;
                 break;
-            case 'channel-aftertouch':
+            case 'channel-pressure':
                 message.type = 0x0d;
                 message.param1 = detail.value;
                 message.param2 = null;
