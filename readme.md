@@ -4,7 +4,7 @@
 ```javascript
 
     var midi = {
-        header: { type: 1, timeDivision: 96, trackCount: 1 },
+        header: { type: 1, division: 96, trackCount: 1 },
         tracks: [
             [
                 // meta messages

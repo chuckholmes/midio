@@ -16,7 +16,7 @@ window.Midio.Builder = function (){
         var output = { 
             header: { 
                 type: input.header.type, 
-                timeDivision: input.header.timeDivision, 
+                division: input.header.division, 
                 trackCount: input.header.trackCount 
             }, 
             tracks: [] 
@@ -41,7 +41,7 @@ window.Midio.Builder = function (){
         var output = { 
             header: { 
                 type: input.header.type, 
-                timeDivision: input.header.timeDivision, 
+                division: input.header.division, 
                 trackCount: input.header.trackCount 
             },
             tracks: [] 

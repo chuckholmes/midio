@@ -44,7 +44,7 @@ window.Midio.Writer = (function (){
 
         writer.writeInt16(header.type);
         writer.writeInt16(header.trackCount);
-        writer.writeInt16(header.timeDivision);
+        writer.writeInt16(header.division);
 
         return writer.getBuffer();
     }

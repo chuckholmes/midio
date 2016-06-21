@@ -57,12 +57,12 @@ window.Midio.Reader = (function (){
 
         var type = reader.readInt16();
         var trackCount = reader.readInt16();
-        var timeDivision = reader.readInt16();
+        var division = reader.readInt16();
 
         return {
             type: type,
             trackCount: trackCount,
-            timeDivision: timeDivision
+            division: division
         };
     }
 

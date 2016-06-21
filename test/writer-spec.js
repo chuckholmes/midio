@@ -28,14 +28,14 @@ describe('Midio.Writer', function () {
     
     it('should write Header', function(){
        
-        var input = { type: 0, trackCount: 1, timeDivision: 714 };
+        var input = { type: 0, trackCount: 1, division: 714 };
               
         var buffer = writer.writeHeader(input);        
         var output = reader.readHeader(buffer);
         
         expect(output.type).toBe(input.type);
         expect(output.trackCount).toBe(input.trackCount);
-        expect(output.timeDivision).toBe(input.timeDivision);                                               
+        expect(output.division).toBe(input.division);                                               
     });
     
     it('should write Track', function () {
@@ -95,7 +95,7 @@ describe('Midio.Writer', function () {
     it('should write Details', function () {
 
         var midi = {
-            header: { type: 1, timeDivision: 96, trackCount: 1 },
+            header: { type: 1, division: 96, trackCount: 1 },
             tracks: [
                 [
                     // meta messages
