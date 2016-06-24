@@ -109,4 +109,10 @@ var SEQUENCE = 0x00,
     TIME_SIGNATURE = 0x58, 
     KEY_SIGNATURE = 0x59;                
     
+
+var builder = new Midio.Builder();
+
+writeLongMessage(writer, builder.buildLongMessage(message));
+writeShortMessage(writer, builder.buildShortMessage(message));
+
 ```

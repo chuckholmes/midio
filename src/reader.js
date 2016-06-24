@@ -79,20 +79,19 @@ window.Midio.Reader = (function (){
             status = reader.readUint8();
 
             if ((status & 0xf0) == 0xf0) {
-                message = readMetaMessage(reader);
+                message = _builder.buildMetaMessage(readLongMessage(reader));
             }
             else {                               
-                message = readChannelMessage(delta, status, reader);
+                message = _builder.buildChannelMessage(readShortMessage(delta, status, reader));
             }
-
-            var detail = _builder.buildDetail(message);
-            messages.push(detail);
+            
+            messages.push(message);
         }
 
         return messages;
     }
 
-    function readMetaMessage(reader) {
+    function readLongMessage(reader) {
         
         var data = null;
         var type = reader.readUint8();
@@ -109,7 +108,7 @@ window.Midio.Reader = (function (){
         };
     }
 
-    function readChannelMessage(delta, status, reader) {
+    function readShortMessage(delta, status, reader) {
 
         var param1 = null;
         var param2 = null;

@@ -53,21 +53,18 @@ window.Midio.Writer = (function (){
 
         var writer = new Midio.BufferWriter();
 
-        track.forEach(function (detail){
-
-            var message = _builder.buildMessage(detail);
-
-            if (message.channel !== undefined) {
-                writeShortMessage(writer, message);
-            } else {
-                writeMetaMessage(writer, message);
+        track.forEach(function (message){            
+            if (message.channel !== undefined) {                
+                writeShortMessage(writer, _builder.buildShortMessage(message));
+            } else {                
+                writeLongMessage(writer, _builder.buildLongMessage(message));
             }
         });
 
         return writer.getBuffer();
     }
 
-    function writeMetaMessage (writer, message) {
+    function writeLongMessage (writer, message) {
 
         writer.writeUint8(0x0);
         writer.writeUint8(0xFF);

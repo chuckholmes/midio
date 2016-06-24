@@ -53,20 +53,9 @@ describe('Midio.Writer', function () {
     it('should write File', function () {
         
         var inputBuffer = _buffer;                
-        var inputDetails = reader.read(inputBuffer);                        
-        //var inputDetails = builder.buildMidiDetails(inputMessages);
-                        
-        //var outputMessages = builder.buildMidiMessages(inputDetails);
-        //var outputDetails = builder.buildMidiDetails(outputMessages);        
-        var outputBuffer = writer.write(inputDetails);
-        
-        
-        //var isValid = true;
-        //for (var i = 0; i<inputDetails.tracks[0].length; i++ ) {
-        //    isValid = (JSON.stringify(inputDetails.tracks[0][i]) == JSON.stringify(outputDetails.tracks[0][i]));
-            //console.log(i + ' : ' + isValid);    
-       //}
-                                
+        var inputMessages = reader.read(inputBuffer);                        
+        var outputBuffer = writer.write(inputMessages);
+                            
         expect(compareBytes(inputBuffer, outputBuffer)).toBe(true);
         
         // build blob
@@ -76,23 +65,17 @@ describe('Midio.Writer', function () {
         expect(outputBlob.size).toBe(outputBuffer.byteLength);
          
         // load blob
-        loadBlob(outputBlob).then(function (outputBuffer) {
-            
-            //var outputMessages = reader.read(outputBuffer);
-            //var outputDetails = builder.buildMidiDetails(outputMessages);            
-            //console.log(outputDetails);
-            
-            // compare bytes
-            //expect(compareBytes(inputBuffer, outputBuffer)).toBe(true);                        
+        loadBlob(outputBlob).then(function (buffer) {            
+            var outputMessages = reader.read(buffer);                        
+            //console.log(outputMessages);                                                            
         }.bind(this));
-                               
-        
-        //downloadBlob(outputBlob, 'shouldWriteFile.mid');                               
-                               
+                                       
+        //downloadBlob(outputBlob, 'shouldWriteFile.mid');         
+                                                             
     });
 
 
-    it('should write Details', function () {
+    it('should write Messages', function () {
 
         var midi = {
             header: { type: 1, division: 96, trackCount: 1 },
@@ -133,18 +116,23 @@ describe('Midio.Writer', function () {
         // create blob
         var blob = new Blob([new Uint8Array(buffer)], {type: 'application/octet-binary'});
 
-        expect(blob.size).toBe(buffer.byteLength);
+        expect(blob.size).toBe(buffer.byteLength);        
 
         // download blob
         //downloadBlob(blob, 'shouldWriteDetails.mid');
+
+        // log base64
+        //console.log(btoa(Buffer.utils.bufferToByteString(buffer)));
 
     });
 
 
     it('should write Blob', function () {
-        
+                
         var midi = reader.read(_buffer);        
         var buffer = writer.write(midi);
+
+        expect(compareBytes(buffer, _buffer)).toBe(true);
         
         // create blob        
         var inputArray = new Uint8Array(buffer);
@@ -154,6 +142,8 @@ describe('Midio.Writer', function () {
                 
         // load blob
         loadBlob(blob).then(function(outputBuffer) {
+            //console.log((outputBuffer.byteLength == buffer.byteLength));
+            //console.log(compareBytes(outputBuffer, buffer));            
             //expect(outputBuffer.byteLength).toBe(buffer.byteLength);
             //expect(compareBytes(outputBuffer, buffer)).toBe(true);  
         });

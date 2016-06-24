@@ -40,8 +40,10 @@ module.exports = function(grunt) {
 
     grunt.registerTask('help', function() {
         console.log('');
-        console.log('grunt lint             runs jsHint');
-        console.log('');
+        console.log('Availible Commands:');        
+        console.log('  grunt lint');
+        console.log('  grunt concat');
+        console.log('  grunt uglify');
     });
 
     grunt.registerTask('lint', ['jshint']);
