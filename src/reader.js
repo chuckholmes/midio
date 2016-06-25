@@ -81,7 +81,7 @@ window.Midio.Reader = (function (){
             if ((status & 0xf0) == 0xf0) {
                 message = _builder.buildMetaMessage(readLongMessage(reader));
             }
-            else {                               
+            else {
                 message = _builder.buildChannelMessage(readShortMessage(delta, status, reader));
             }
             

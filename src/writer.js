@@ -53,15 +53,28 @@ window.Midio.Writer = (function (){
 
         var writer = new Midio.BufferWriter();
 
-        track.forEach(function (message){            
-            if (message.channel !== undefined) {                
-                writeShortMessage(writer, _builder.buildShortMessage(message));
-            } else {                
-                writeLongMessage(writer, _builder.buildLongMessage(message));
-            }
+        track.forEach(function (message){
+            writeMessage(writer, message);
         });
 
         return writer.getBuffer();
+    }
+
+    function writeMessage (writer, message) {
+
+        var shortMessage = _builder.buildShortMessage(message);
+        if (shortMessage) {
+            writeShortMessage(shortMessage);
+            return;
+        }
+
+        var longMessage = _builder.buildLongMessage(message);
+        if (longMessage) {
+            writeLongMessage(longMessage);
+            return;
+        }
+
+        throw 'Unrecognised Message Type: ' + message.type;
     }
 
     function writeLongMessage (writer, message) {
@@ -89,5 +102,4 @@ window.Midio.Writer = (function (){
             writer.writeUint8(message.param2);
         }
     }
-
 });

@@ -10,9 +10,9 @@ describe('Midio.Builder', function () {
         var input = _reader.read(_buffer);
         var track = input.tracks[0];
 
-        track.forEach(function (m) {
-           message = (m.channel !== undefined) ? _builder.buildShortMessage(m) : _builder.buildLongMessage(m);
-           // console.log(message);
+        track.forEach(function (m) {           
+           var message = _builder.buildShortMessage(m) || _builder.buildLongMessage(m) || 'Message not found: ' + m.type;
+            //console.log(message);
         });
 
         expect(typeof _builder).toBe('object');
