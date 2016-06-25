@@ -50,7 +50,7 @@ window.Midio.Builder = function (){
                 break;
             case 0x20:
                 output.type = 'channel-prefix';
-                output.value = reader.readInt8();
+                output.channel = reader.readInt8();
                 break;
             case 0x2f:
                 output.type = 'end-of-track';
@@ -110,7 +110,7 @@ window.Midio.Builder = function (){
             case 0x0a:
                 output.type = 'key-pressure';
                 output.note = input.param1;
-                output.value = input.param2;
+                output.pressure = input.param2;
                 break;
             case 0x0b:
                 output.type = 'control-change';
@@ -119,11 +119,11 @@ window.Midio.Builder = function (){
                 break;
             case 0x0c:
                 output.type = 'program-change';
-                output.value = input.param1;
+                output.program = input.param1;
                 break;
             case 0x0d:
                 output.type = 'channel-pressure';
-                output.value = input.param1;
+                output.pressure = input.param1;
                 break;
             case 0x0e:
                 output.type = 'pitch-bend';
@@ -187,7 +187,7 @@ window.Midio.Builder = function (){
                 break;
             case 'channel-prefix':
                 output.type = 0x20;
-                output.data = writer.writeInt8(input.value).getBuffer();
+                output.data = writer.writeInt8(input.channel).getBuffer();
                 output.length = output.data.byteLength;
                 break;
             case 'end-of-track':
@@ -246,7 +246,7 @@ window.Midio.Builder = function (){
             case 'key-pressure':
                 output.type = 0x0a;
                 output.param1 = input.note;
-                output.param2 = input.value;
+                output.param2 = input.pressure;
                 break;
             case 'control-change':
                 output.type = 0x0b;
@@ -255,12 +255,12 @@ window.Midio.Builder = function (){
                 break;
             case 'program-change':
                 output.type = 0x0c;
-                output.param1 = input.value;
+                output.param1 = input.program;
                 output.param2 = null;
                 break;
             case 'channel-pressure':
                 output.type = 0x0d;
-                output.param1 = input.value;
+                output.param1 = input.pressure;
                 output.param2 = null;
                 break;                
             case 'pitch-bend':

@@ -25,11 +25,11 @@
                 { type: "note-on", note: 60, velocity: 90, channel: 0, delta: 0 },
                 { type: "note-off", note: 60, velocity: 90, channel: 0, delta: 128 },
                 { type: "control-change", control: 7, value: 128, channel: 0, delta: 0 },
-                { type: "key-pressure", note: 62, value: 64, channel: 0, delta: 0 },
-                { type: "program-change", value: 36, channel: 0, delta: 0 },
-                { type: "channel-pressure", value: 127, channel: 0, delta: 0 },
+                { type: "key-pressure", note: 62, pressure: 64, channel: 0, delta: 0 },
+                { type: "program-change", program: 36, channel: 0, delta: 0 },
+                { type: "channel-pressure", pressure: 127, channel: 0, delta: 0 },
                 { type: "pitch-bend", value: 16383, channel: 0, delta: 0 },
-                { type: "channel-prefix", value: 10 },
+                { type: "channel-prefix", channel: 10 },
                 { type: "end-of-track" }
             ]
         ]

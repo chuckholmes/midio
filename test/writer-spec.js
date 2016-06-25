@@ -93,16 +93,16 @@ describe('Midio.Writer', function () {
                     { type: "time-signature", numerator: 6, denominator: 8, metronome: 24, thirtyseconds: 8 },
                     { type: "key-signature", key: 1, scale: 1 },
                     { type: 'sequence-number', value: 1 },
-                    { type: "channel-prefix", value: 10 },
+                    { type: "channel-prefix", channel: 10 },
 
                     // channel messages
                     { type: "note-on", note: 60, velocity: 90, channel: 0, delta: 0 },
                     { type: "note-off", note: 60, velocity: 90, channel: 0, delta: 128 },
                     { type: "pitch-bend", value: 16383, channel: 0, delta: 0 },
-                    { type: "key-pressure", note: 62, value: 64, channel: 0, delta: 0 },
-                    { type: "channel-pressure", value: 127, channel: 0, delta: 0 },
+                    { type: "key-pressure", note: 62, pressure: 64, channel: 0, delta: 0 },
+                    { type: "channel-pressure", channel: 0, pressure: 127, delta: 0 },
                     { type: "control-change", control: 7, value: 128, channel: 0, delta: 0 },
-                    { type: "program-change", value: 36, channel: 0, delta: 0 },
+                    { type: "program-change", program: 36, channel: 0, delta: 0 },
 
                     // the end
                     { type: "end-of-track" }
