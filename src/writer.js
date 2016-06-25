@@ -64,13 +64,13 @@ window.Midio.Writer = (function (){
 
         var shortMessage = _builder.buildShortMessage(message);
         if (shortMessage) {
-            writeShortMessage(shortMessage);
+            writeShortMessage(writer, shortMessage);
             return;
         }
 
         var longMessage = _builder.buildLongMessage(message);
         if (longMessage) {
-            writeLongMessage(longMessage);
+            writeLongMessage(writer, longMessage);
             return;
         }
 
