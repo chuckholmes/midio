@@ -48,10 +48,22 @@ window.Midio.Builder = function (){
                 output.type = 'cue-point';
                 output.text = reader.readString(input.length);
                 break;
+            case 0x08:
+                output.type = 'program-name';
+                output.text = reader.readString(input.length);
+                break;
+            case 0x09:
+                output.type = 'device-name';
+                output.text = reader.readString(input.length);
+                break;                
             case 0x20:
                 output.type = 'channel-prefix';
                 output.channel = reader.readInt8();
                 break;
+            case 0x21:
+                output.type = 'midi-port';
+                output.port = reader.readInt8();
+                break;                
             case 0x2f:
                 output.type = 'end-of-track';
                 break;
@@ -185,11 +197,26 @@ window.Midio.Builder = function (){
                 output.data = writer.writeString(input.text).getBuffer();
                 output.length = output.data.byteLength;
                 break;
+            case 'program-name':
+                output.type = 0x08;
+                output.data = writer.writeString(input.text).getBuffer();
+                output.length = output.data.byteLength;
+                break;
+            case 'device-name':
+                output.type = 0x09;
+                output.data = writer.writeString(input.text).getBuffer();
+                output.length = output.data.byteLength;
+                break;                
             case 'channel-prefix':
                 output.type = 0x20;
                 output.data = writer.writeInt8(input.channel).getBuffer();
                 output.length = output.data.byteLength;
                 break;
+            case 'midi-port':
+                output.type = 0x21;
+                output.data = writer.writeInt8(input.port).getBuffer();
+                output.length = output.data.byteLength;
+                break;                
             case 'end-of-track':
                 output.type = 0x2f;
                 output.data = null;

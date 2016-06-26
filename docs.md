@@ -26,9 +26,9 @@ r = read, w = write
 (r/w) end-of-track  
 ----- smtp-offset   
 ----- sequencer-specific    
------ program-name  
------ device-name   
------ midi-port 
+(r/w) program-name  
+(r/w) device-name   
+(r/w) midi-port 
 
 ###### Channel Mode Events
 ----- reset-controllers  

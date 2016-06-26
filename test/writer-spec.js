@@ -1,7 +1,11 @@
 describe('Midio.Writer', function () {
 
     //var _b64 = "TVRoZAAAAAYAAAABAIBNVHJrAAAAFgCQPFqBAIA8WgCQPlqBAIA+WgD/LwA=";
-    var _b64 = "TVRoZAAAAAYAAQABAPBNVHJrAAAAlQD/ARBQb3dlcmVkIGJ5IE1pZGlvAP8CCUpTRmFuYXRpYwD/Aw1Mb3ZlIFdyYW5nbGVyAP8ECEtleWJvYXJkAP8FEE9oaCBiYWJ5IHllYWguLi4A/wYFSW50cm8A/wcHRGFuY2VycwD/UQMGGoAA/1gEBgMYCACQPFqBAIA8WgCwB4AAoD5AAMAkANB/AP8gAQoA/y8A";
+    //var _b64 = "TVRoZAAAAAYAAQABAPBNVHJrAAAAlQD/ARBQb3dlcmVkIGJ5IE1pZGlvAP8CCUpTRmFuYXRpYwD/Aw1Mb3ZlIFdyYW5nbGVyAP8ECEtleWJvYXJkAP8FEE9oaCBiYWJ5IHllYWguLi4A/wYFSW50cm8A/wcHRGFuY2VycwD/UQMGGoAA/1gEBgMYCACQPFqBAIA8WgCwB4AAoD5AAMAkANB/AP8gAQoA/y8A";
+    
+    var _b64 = "TVRoZAAAAAYAAQABAGBNVHJrAAAAzwD/ARBQb3dlcmVkIGJ5IE1pZGlvAP8CCUpTRmFuYXRpYwD/Aw1Mb3ZlIFdyYW5nbGVyAP8ECEtleWJvYXJkAP8GBUludHJvAP8HCkZsYXNoIFBvdHMA/wUTR290dGEgd3JhbmdsZSBvbi4uLgD/UQMGGoAA/1gEBgMYCAD/WQIBAQD/AAIAAQD/IAEKAP8JC0RldmljZSBOYW1lAP8IDFByb2dyYW0gTmFtZQD/IQEKAJA8WoEAgDxaAOB/fwCgPkAA0H8AsAeAAMAkAP8vAA==";    
+
+    
     var _binary = window.atob(_b64); 
     var _buffer = Buffer.utils.byteStringToBuffer(_binary);
 
@@ -85,7 +89,7 @@ describe('Midio.Writer', function () {
                     { type: "text", text: "Powered by Midio" },
                     { type: "copyright", text: "JSFanatic" },                    
                     { type: "track-name", text: "Love Wrangler" },
-                    { type: "instrument-name", text: "Keyboard" },
+                    { type: "instrument-name", text: "Keyboard" },             
                     { type: "marker", text: "Intro" },
                     { type: "cue-point", text: "Flash Pots" },
                     { type: "lyrics", text: "Gotta wrangle on..." },
@@ -93,7 +97,11 @@ describe('Midio.Writer', function () {
                     { type: "time-signature", numerator: 6, denominator: 8, metronome: 24, thirtyseconds: 8 },
                     { type: "key-signature", key: 1, scale: 1 },
                     { type: 'sequence-number', value: 1 },
-                    { type: "channel-prefix", channel: 10 },
+                    { type: "channel-prefix", channel: 10 },   
+
+                    { type: "device-name", text: "Device Name"},
+                    { type: "program-name", text: "Program Name"},       
+                    { type: "midi-port", port: 10 },                                     
 
                     // channel messages
                     { type: "note-on", note: 60, velocity: 90, channel: 0, delta: 0 },
