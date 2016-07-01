@@ -90,7 +90,7 @@ window.Midio.BufferReader = function (buffer) {
   }
 
   // read a MIDI-style variable-length integer (big-endian value in groups of 7 bits,
-  // with top bit set to signify that another byte follows)           
+  // with top bit set to signify that another byte follows)
   function readVarInt() {
     var result = 0;
     while (true) {
