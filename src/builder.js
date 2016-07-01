@@ -10,7 +10,6 @@ window.Midio.Builder = function (){
     };
 
     function buildMetaMessage (input) {
-
         var output = {};
         var reader = (input.data) ? new Midio.BufferReader(input.data) : null;                                
 
@@ -105,7 +104,6 @@ window.Midio.Builder = function (){
     }
 
     function buildChannelMessage (input) {
-
         var output = {};                                        
 
         switch (input.type) {                        
@@ -152,7 +150,6 @@ window.Midio.Builder = function (){
     }
 
     function buildLongMessage (input) {
-
         var writer = new Midio.BufferWriter();
         var output = {};
 
@@ -255,7 +252,6 @@ window.Midio.Builder = function (){
     }
 
     function buildShortMessage (input) {
-
         var writer = new Midio.BufferWriter();
         var output = {};
 
@@ -305,6 +301,5 @@ window.Midio.Builder = function (){
         }
         
         return output;
-    }
-    
+    }    
 };

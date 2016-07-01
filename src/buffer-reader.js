@@ -33,13 +33,10 @@ window.Midio.BufferReader = function (buffer) {
     }
 
     function readString(length) {
-
         var result = '';
-
         for (var i=_position; i<(_position+length); i++) {
             result += String.fromCharCode(_view.getUint8(i));
         }
-
         _position += length;
         return result;
     }
@@ -92,13 +89,10 @@ window.Midio.BufferReader = function (buffer) {
         return result;
     }
 
+    // read a MIDI-style variable-length integer (big-endian value in groups of 7 bits,
+    // with top bit set to signify that another byte follows)           
 	function readVarInt() {
-
-        // read a MIDI-style variable-length integer (big-endian value in groups of 7 bits,
-        // with top bit set to signify that another byte follows)       
-
-        var result = 0;
-        
+        var result = 0;        
         while (true) {
             var b = readInt8();
             if (b & 0x80) {

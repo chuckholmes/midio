@@ -1,7 +1,6 @@
 window.Midio = window.Midio || {};
 
-window.Midio.Writer = (function (){
-    
+window.Midio.Writer = (function (){    
     var _builder = new Midio.Builder();
     
     return {
@@ -10,8 +9,7 @@ window.Midio.Writer = (function (){
         writeHeader: writeHeader
     };
     
-    function write(midi) {
-        
+    function write(midi) {        
         var writer = new Midio.BufferWriter();
 
         // write header
@@ -28,29 +26,22 @@ window.Midio.Writer = (function (){
     }
 
     function writeChunk(id, buffer) {
-
         var writer = new Midio.BufferWriter();
-
         writer.writeString(id);
         writer.writeInt32(buffer.byteLength);
         writer.writeBuffer(buffer);
-
         return writer.getBuffer();
     }
 
     function writeHeader (header) {
-
         var writer = new Midio.BufferWriter();
-
         writer.writeInt16(header.type);
         writer.writeInt16(header.trackCount);
         writer.writeInt16(header.division);
-
         return writer.getBuffer();
     }
 
     function writeTrack (track) {
-
         var writer = new Midio.BufferWriter();
 
         track.forEach(function (message){
@@ -61,7 +52,6 @@ window.Midio.Writer = (function (){
     }
 
     function writeMessage (writer, message) {
-
         var shortMessage = _builder.buildShortMessage(message);
         if (shortMessage) {
             writeShortMessage(writer, shortMessage);
@@ -78,7 +68,6 @@ window.Midio.Writer = (function (){
     }
 
     function writeLongMessage (writer, message) {
-
         writer.writeUint8(0x0);
         writer.writeUint8(0xFF);
         writer.writeUint8(message.type);
@@ -90,11 +79,8 @@ window.Midio.Writer = (function (){
     }
 
     function writeShortMessage (writer, message) {
-
         writer.writeVarInt(message.delta);
-
         var status = parseInt(message.type.toString(16) + message.channel.toString(16), 16);
-
         writer.writeUint8(status);
         writer.writeUint8(message.param1);
 

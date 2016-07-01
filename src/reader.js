@@ -13,7 +13,6 @@ window.Midio.Reader = (function (){
     };
 
     function read (buffer) {
-
         var midi = {header: null, tracks:[]};
         var reader = new Midio.BufferReader(buffer);
         var headerChunk = readChunk(reader);
@@ -39,7 +38,6 @@ window.Midio.Reader = (function (){
     }
 
     function readChunk (reader) {
-
         var id = reader.readString(4);
         var length = reader.readInt32();
         var buffer = reader.readBuffer(length);
@@ -52,9 +50,7 @@ window.Midio.Reader = (function (){
     }
 
     function readHeader (buffer) {
-
         var reader = new Midio.BufferReader(buffer);
-
         var type = reader.readInt16();
         var trackCount = reader.readInt16();
         var division = reader.readInt16();
@@ -66,11 +62,9 @@ window.Midio.Reader = (function (){
         };
     }
 
-    function readTrack (buffer) {
-        
+    function readTrack (buffer) {        
         var messages = [];
         var message, delta, status;
-
         var reader = new Midio.BufferReader(buffer);
 
         while (reader.getPosition() < reader.buffer.byteLength) {
@@ -91,8 +85,7 @@ window.Midio.Reader = (function (){
         return messages;
     }
 
-    function readLongMessage(reader) {
-        
+    function readLongMessage(reader) {        
         var data = null;
         var type = reader.readUint8();
         var length = reader.readVarInt();
@@ -109,7 +102,6 @@ window.Midio.Reader = (function (){
     }
 
     function readShortMessage(delta, status, reader) {
-
         var param1 = null;
         var param2 = null;
         

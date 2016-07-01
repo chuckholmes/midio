@@ -25,7 +25,6 @@ window.Midio.BufferWriter = function (buffer) {
     }
 
     function writeInt8(value) {
-
         _buffer = transfer(_buffer, (_buffer.byteLength + 1));
         new DataView(_buffer).setInt8(_position, value);
         _position += 1;
@@ -34,7 +33,6 @@ window.Midio.BufferWriter = function (buffer) {
     }
 
     function writeUint8(value) {
-
         _buffer = transfer(_buffer, (_buffer.byteLength + 1));
         new DataView(_buffer).setUint8(_position, value);
         _position += 1;
@@ -43,7 +41,6 @@ window.Midio.BufferWriter = function (buffer) {
     }
 
     function writeInt16(value, littleEndian) {
-
         var int16Length = 2;
 
         _buffer = transfer(_buffer, (_buffer.byteLength + int16Length));
@@ -54,7 +51,6 @@ window.Midio.BufferWriter = function (buffer) {
     }
 
     function writeUint16(value, littleEndian) {
-
         var uint16Length = 2;
 
         _buffer = transfer(_buffer, (_buffer.byteLength + uint16Length));
@@ -65,7 +61,6 @@ window.Midio.BufferWriter = function (buffer) {
     }
 
     function writeInt32(value, littleEndian) {
-
         var int32Length = 4;
 
         _buffer = transfer(_buffer, (_buffer.byteLength + int32Length));
@@ -76,7 +71,6 @@ window.Midio.BufferWriter = function (buffer) {
     }
 
     function writeUint32(value, littleEndian) {
-
         var uint32Length = 4;
 
         _buffer = transfer(_buffer, (_buffer.byteLength + uint32Length));
@@ -87,7 +81,6 @@ window.Midio.BufferWriter = function (buffer) {
     }
 
     function writeFloat32(value, littleEndian) {
-
         var float32Length = 4;
 
         _buffer = transfer(_buffer, (_buffer.byteLength + float32Length));
@@ -98,7 +91,6 @@ window.Midio.BufferWriter = function (buffer) {
     }
 
     function writeFloat64(value, littleEndian) {
-
         var float64Length = 8;
 
         _buffer = transfer(_buffer, (_buffer.byteLength + float64Length));
@@ -108,6 +100,8 @@ window.Midio.BufferWriter = function (buffer) {
         return this;
     }
 
+    // write a MIDI-style variable-length integer (big-endian value in groups of 7 bits,
+    // with top bit set to signify that another byte follows)     
     function writeVarInt(value) {
 
         // create varInt
@@ -143,7 +137,6 @@ window.Midio.BufferWriter = function (buffer) {
     }
 
     function writeString(str) {
-
         var length = str.length;
 
         _buffer = transfer(_buffer, (_buffer.byteLength + length));
@@ -158,7 +151,6 @@ window.Midio.BufferWriter = function (buffer) {
     }
 
     function writeBuffer(buffer) {
-
         var length = buffer.byteLength;
         var byteArray = new Uint8Array(buffer);
 
@@ -178,5 +170,4 @@ window.Midio.BufferWriter = function (buffer) {
         new Uint8Array(newBuffer).set(new Uint8Array(buffer));
         return newBuffer;                
     }
-
 };
