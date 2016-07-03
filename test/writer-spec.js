@@ -71,7 +71,6 @@ describe('Midio.Writer', function () {
 
   });
 
-
   it('It should write Messages', function () {
 
     var midi = {
