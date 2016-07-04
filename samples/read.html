@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <title>Midio Reader</title>
+
+    <script src="../dest/midio.js"></script>
+
+    <style>
+      body { 
+        padding: 20px 0 0 50px;
+        font-family: Arial, Helvetica, sans-serif;
+      }
+
+      input[type=file] { 
+        width: 0.1px;
+        height: 0.1px;
+        opacity: 0;
+        overflow: hidden;
+        position: absolute;
+        z-index: -1;
+      }
+
+      label[for=file] {
+        border: 1px solid gray;
+        padding: 3px 5px;
+        border-radius: 3px;
+      }
+
+      label[for=file]:hover {
+        background-color: yellow;
+      }
+
+      pre {
+        width: 300;
+        margin: 20px 0 0 0;
+      }
+    </style>
+  </head>
+  
+  <body>
+    <div>
+      <input type="file" id="file" name="file" />
+      <label for="file" >Open File</label>
+    </div>
+
+    <pre id='output'></pre>
+
+    <script>
+      document.addEventListener('DOMContentLoaded', function() {
+        var fileReader = new FileReader();
+        var midiReader = new Midio.Reader();
+
+        var output = document.querySelector('#output');
+        var filePicker = document.querySelector('#file');
+        filePicker.onchange = onFileChange;
+
+        function onFileChange(e) {
+          var file = e.target.files[0];
+
+          fileReader.onload = function (event) {
+              midi = midiReader.read(event.target.result);
+              output.innerHTML = formatOutput(midi);
+          }.bind(this);
+
+          fileReader.readAsArrayBuffer(file);
+        }
+
+        function formatOutput(midi) {
+          var output = 'var midi = {\n'
+          output += '  header : ' + JSON.stringify(midi.header) + '\n';
+          output += '  tracks : [\n';
+
+          midi.tracks.forEach(function (track, trkIndex) {
+            output += '    [\n';
+
+            track.forEach(function (msg, msgIndex) {
+              output += '      ' + JSON.stringify(msg);
+              output += (msgIndex < (track.length -1)) ? ',\n' : '\n'
+            })
+
+            output += (trkIndex < (midi.tracks.length - 1)) ? '    ],\n' : '    ]\n'; 
+          })
+
+          output += '  ]\n};\n';
+
+          return output;
+        }
+      });
+
+    </script>
+  </body>
+</html>

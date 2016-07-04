@@ -100,8 +100,8 @@ window.Midio.BufferWriter = function (buffer) {
     return this;
   }
 
-  // write a MIDI-style variable-length integer (big-endian value in groups of 7 bits,
-  // with top bit set to signify that another byte follows)     
+  // writes a MIDI-style variable-length integer (big-endian value in groups of 7 bits,
+  // with top bit set to signify that another byte follows)
   function writeVarInt(value) {
 
     // create varInt
