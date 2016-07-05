@@ -67,13 +67,12 @@
         }
 
         function formatOutput(midi) {
-          var output = 'var midi = {\n'
-          output += '  header : ' + JSON.stringify(midi.header) + '\n';
-          output += '  tracks : [\n';
+          var output = '{\n'
+          output += '  "header" : ' + JSON.stringify(midi.header) + ',\n';
+          output += '  "tracks" : [\n';
 
           midi.tracks.forEach(function (track, trkIndex) {
             output += '    [\n';
-
             track.forEach(function (msg, msgIndex) {
               output += '      ' + JSON.stringify(msg);
               output += (msgIndex < (track.length -1)) ? ',\n' : '\n'
@@ -82,8 +81,7 @@
             output += (trkIndex < (midi.tracks.length - 1)) ? '    ],\n' : '    ]\n'; 
           })
 
-          output += '  ]\n};\n';
-
+          output += '  ]\n}\n';
           return output;
         }
       });
